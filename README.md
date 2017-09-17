@@ -60,9 +60,9 @@ Im Konfigurationsformular sind die Parameter zu ergänzen.
 In IP-Symcon werden Daten zwischen einzelnen Instanzen über den [Datenfluss in IP-Symcon](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/datenfluss/) weitergegeben. 
 Hierbei hat jede Instanz in IP-Symcon eine eindeutige GUID (Globally Unique Identifier), anhand dessen die Instanz eindeutig erkannt werden kann. Für ein PHP Modul braucht jede Instanz eine eindeutige GUID.
 Innerhalb der module.json wird angegeben wie die GUID der anderen mit der Instanz kommunizierenden Instanzen lauten, damit IP-Symcon weis wohin die Daten zu senden sind.
-Existierende Instanzen wie TCP, UDP, Mulicast Socket usw. haben feststehende GUID über die diese angesprochen werden. Sollte man z.B. einen eigene IO Instanz definieren wird auch hierfür eine GUID benötigt.
+Existierende Instanzen wie TCP-, UDP-, Multicast Socket usw. haben feststehende GUID über die diese angesprochen werden. Sollte man z.B. eine eigene IO Instanz definieren wird auch hierfür eine GUID benötigt.
 Der Datenaustausch zwischen IO <-> Splitter <-> Gerät erfolgt über die Funktionen [ForwardData](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/module/forwarddata/) und [ReceiveData](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/module/receivedata/) in beiden
-Funktionen ist jewiels die passende GUID einzutragen damit die funktion an die passende Instanz versendet.
+Funktionen ist jeweils die passende GUID einzutragen, damit die Funktion an die passende Instanz versendet.
 
 Das Modul ist einfach eine kleine Hilfestellung um neue GUID zu generieren bzw. nicht versehentlich eine GUID an die falsche Stelle zu kopieren. Daher können die Vorlagen die generiert werden so übernommen werden und die GUID sind schon an der passenden Stelle eingetragen.
 
@@ -103,10 +103,10 @@ DataFlowGenerator_GenerateGUID(integer $InstanceID)
 Generiert mehrere GUID für ein PHP Modul. Die GUID wird in einem Array von der Funktion zurückgeben. Gleichzeitig werden die GUID in den Webfront geschrieben.
 
 ```php
-DataFlowGenerator_CreateScripts(integer $InstanceID, array $instances, array $files, $volume)
+DataFlowGenerator_CreateScripts(integer $InstanceID)
 ```
 
-Legt unter der im Modul eingestellten Kategorie Bespiel Skripte an. Diese können als Vorlage für ein PHP Modul genutzt werden.
+Legt unter der im Modul eingestellten Kategorie Beispiel Skripte an. Diese können als Vorlage für ein PHP Modul genutzt werden.
 
 
 ###  b. GUIDs und Datenaustausch:
