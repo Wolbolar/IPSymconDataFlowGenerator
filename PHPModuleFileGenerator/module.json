@@ -1,0 +1,11 @@
+{
+    "id": "{CB4BD64D-7088-42F0-919F-644C00CF0EBE}",
+    "name": "DataFlowGenerator",
+    "type": 3,
+    "vendor": "IP Symcon",
+    "aliases": ["PHP Modul Dataflow Generator"],
+    "parentRequirements": [],
+    "childRequirements": [],
+    "implemented": [],
+    "prefix": "DataFlowGenerator"
+}
