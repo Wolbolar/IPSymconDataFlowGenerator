@@ -124,10 +124,24 @@ class DataFlowGenerator extends IPSModule
 
 	public function GenerateGUID()
     {
+        $ownio = $this->ReadPropertyInteger("ownio");
         $library_guid = $this->getGUID(); // Verweis im Überverzeichnis
-        $io_guid = $this->getGUID(); //
-        $rx_guid = $this->getGUID(); //
-        $tx_guid = $this->getGUID(); //
+        $dataflowtype = $this->ReadPropertyInteger("dataflowtype");
+        if($ownio == 1)
+        {
+            $io_guid = $this->getGUID(); //
+            $rx_guid = $this->getGUID(); //
+            $tx_guid = $this->getGUID(); //
+        }
+        else
+        {
+            $typeio = $this->ReadPropertyInteger("typeio");
+            $ioguids = $this->GetIOGUID($typeio);
+            $io_guid = $ioguids["io_guid"];
+            $rx_guid = $ioguids["rx_guid"];
+            $tx_guid = $ioguids["tx_guid"];
+
+        }
         $splitter_guid = $this->getGUID(); //
         $splitterinterface_guid = $this->getGUID(); // Interface GUI
         $device_guid = $this->getGUID(); //
@@ -138,10 +152,13 @@ class DataFlowGenerator extends IPSModule
 <tr><td>Library GUID</td><td>'.$library_guid.'</td></tr>
 <tr><td>IO GUID</td><td>'.$io_guid.'</td></tr>
 <tr><td>RX GUID</td><td>'.$rx_guid.'</td></tr>
-<tr><td>TX GUID</td><td>'.$tx_guid.'</td></tr>
-<tr><td>Splitter GUID</td><td>'.$splitter_guid.'</td></tr>
-<tr><td>Splitter Interface GUID</td><td>'.$splitterinterface_guid.'</td></tr>
-<tr><td>Device GUID</td><td>'.$device_guid.'</td></tr>
+<tr><td>TX GUID</td><td>'.$tx_guid.'</td></tr>';
+        if($dataflowtype == 0)
+        {
+            $content .= '<tr><td>Splitter GUID</td><td>'.$splitter_guid.'</td></tr>
+<tr><td>Splitter Interface GUID</td><td>'.$splitterinterface_guid.'</td></tr>';
+        }
+        $content .= '<tr><td>Device GUID</td><td>'.$device_guid.'</td></tr>
 <tr><td>Device Interface GUID</td><td>'.$deviceinterface_guid.'</td></tr>
 </table>';
         SetValue($wfguidid, $content);
