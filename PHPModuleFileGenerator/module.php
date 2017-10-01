@@ -14,7 +14,7 @@ class DataFlowGenerator extends IPSModule
         $this->RegisterPropertyString("modulename", "");
         $this->RegisterPropertyString("url", "");
         $this->RegisterPropertyString("version", "0.1");
-        $this->RegisterPropertyFloat("build", 0.1);
+        $this->RegisterPropertyInteger("build", 0);
         $this->RegisterPropertyInteger("CategoryID", 0);
         $this->RegisterPropertyInteger("generateguid", 0);
         $this->RegisterPropertyString("library_guid", "");
@@ -71,7 +71,7 @@ class DataFlowGenerator extends IPSModule
         $modulename = $this->ReadPropertyString("modulename");
         $url = $this->ReadPropertyString("url");
         $version = $this->ReadPropertyString("version");
-        // $build = $this->ReadPropertyFloat("build");
+        // $build = $this->ReadPropertyInteger("build");
         $ModuleCategoryID = $this->ReadPropertyInteger("CategoryID");
         $generateguid = $this->ReadPropertyInteger("generateguid");
         $library_guid = $this->ReadPropertyString("library_guid");
@@ -462,7 +462,7 @@ GUID: `'.$device_guid.'` ';
         $modulename = $this->ReadPropertyString("modulename");
         $url = $this->ReadPropertyString("url");
         $version = $this->ReadPropertyString("version");
-        $build = $this->ReadPropertyFloat("build");
+        $build = $this->ReadPropertyInteger("build");
         $date = 0;
 
         $ident = $this->CreateGUIDIdent($library_guid, "lib");
