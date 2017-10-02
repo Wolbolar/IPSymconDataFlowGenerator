@@ -43,7 +43,7 @@ class DataFlowGenerator extends IPSModule
         $this->RegisterPropertyString("io_multicast_guid", "{BAB408E0-0A0F-48C3-B14E-9FB2FA81F66A}"); // MulticastSocket
         $this->RegisterPropertyString("io_serialport_guid", "{6DC3D946-0D31-450F-A8C6-C42DB8D7D4F1}"); // SerialPort
         $this->RegisterPropertyString("io_serversocket_guid", "{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}"); // Server Socket
-        $this->RegisterPropertyString("io_udpsocket_guid", "{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}"); // UDPSocket
+        $this->RegisterPropertyString("io_udpsocket_guid", "{82347F20-F541-41E1-AC5B-A636FD3AE2D8}"); // UDPSocket
         $this->RegisterPropertyString("io_hid_guid", "{E6D7692A-7F4C-441D-827B-64062CFE1C02}"); // HID
         $this->RegisterPropertyString("io_wwwreader_guid", "{4CB91589-CE01-4700-906F-26320EFCF6C4}"); // WWW Reader
     }
