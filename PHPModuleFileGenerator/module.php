@@ -1151,9 +1151,9 @@ class '.$modulename.' extends IPSModule
         $form = '"actions":
 			[
 				{ "type": "Label", "label": "Generate GUIDs" },
-				{ "type": "Button", "label": "Generate GUID", "onClick": "IPSPHPDataGenerator_GenerateGUID($id);" },
+				{ "type": "Button", "label": "Generate GUID", "onClick": "DataFlowGenerator_GenerateGUID($id);" },
 				{ "type": "Label", "label": "Generate scripts" },
-				{ "type": "Button", "label": "Generate Scripts", "onClick": "IPSPHPDataGenerator_CreateScripts($id);" }
+				{ "type": "Button", "label": "Generate Scripts", "onClick": "DataFlowGenerator_CreateScripts($id);" }
 			],';
         return  $form;
     }
