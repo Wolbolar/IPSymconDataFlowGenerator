@@ -399,7 +399,7 @@ In der _Modules_ Instanz rechts oben auf den Button __*Hinzufügen*__ drücken.
 In dem sich öffnenden Fenster folgende URL hinzufügen:
 
 	
-    `https://github.com/Wolbolar/IPSymconXXX`  
+    `https://github.com/Git_Name/IPSymconXXX`  
     
 und mit _OK_ bestätigen.    
         
@@ -580,7 +580,8 @@ class '.$modulename.'IO extends IPSModule
 	{
 		// Weiterleitung zu allen Gerät-/Device-Instanzen
 		$this->SendDataToChildren(json_encode(Array("DataID" => "'.$rx_guid.'", "Buffer" => $data))); //  I/O RX GUI
-	}';
+	}
+}';
             IPS_SetScriptContent($ScriptID, $content);
         }
         return $ScriptID;
@@ -722,7 +723,8 @@ class '.$modulename.'Splitter extends IPSModule
 			
 		return $result;
 	 
-	}';
+	}
+}';
             IPS_SetScriptContent($ScriptID, $content);
         }
         return $ScriptID;
@@ -749,7 +751,7 @@ class '.$modulename.'Splitter extends IPSModule
             IPS_SetIdent($ScriptID, $deviceident);
             $content = '{
 	"id": "'.$device_guid.'",
-	"name": "Flow",
+	"name": "'.$modulename.'",
 	"type": 3,
 	"vendor": "'.$vendor.'",
 	"aliases": ["'.$aliases.'"],
@@ -805,7 +807,142 @@ class '.$modulename.' extends IPSModule
 			//an Splitter schicken
 			$result = $this->SendDataToParent(json_encode(Array("DataID" => "'.$deviceinterface_guid.'", "Buffer" => $payload))); // Interface GUI
 			return $result;
-		}';
+		}
+		
+	protected function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
+    {
+
+        if(!IPS_VariableProfileExists($Name)) {
+            IPS_CreateVariableProfile($Name, 1);
+        } else {
+            $profile = IPS_GetVariableProfile($Name);
+            if($profile[\'ProfileType\'] != 1)
+                throw new Exception("Variable profile type does not match for profile ".$Name);
+        }
+
+        IPS_SetVariableProfileIcon($Name, $Icon);
+        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
+
+    }
+
+    protected function RegisterProfileIntegerEx($Name, $Icon, $Prefix, $Suffix, $Associations)
+    {
+        if ( sizeof($Associations) === 0 ){
+            $MinValue = 0;
+            $MaxValue = 0;
+        } else {
+            $MinValue = $Associations[0][0];
+            $MaxValue = $Associations[sizeof($Associations)-1][0];
+        }
+
+        $this->RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, 0);
+
+        foreach($Associations as $Association) {
+            IPS_SetVariableProfileAssociation($Name, $Association[0], $Association[1], $Association[2], $Association[3]);
+        }
+
+    }
+
+    protected function RegisterProfileFloat($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits)
+    {
+
+        if(!IPS_VariableProfileExists($Name)) {
+            IPS_CreateVariableProfile($Name, 2);
+        } else {
+            $profile = IPS_GetVariableProfile($Name);
+            if($profile[\'ProfileType\'] != 2)
+                throw new Exception("Variable profile type does not match for profile ".$Name);
+        }
+
+        IPS_SetVariableProfileIcon($Name, $Icon);
+        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+        IPS_SetVariableProfileDigits($Name, $Digits); //  Nachkommastellen
+        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
+
+    }
+
+    protected function RegisterProfileFloatAss($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $Stepsize, $Digits, $Associations)
+    {
+        if ( sizeof($Associations) === 0 ){
+            $MinValue = 0;
+            $MaxValue = 0;
+        }
+        /*
+        else {
+            //undefiened offset
+            $MinValue = $Associations[0][0];
+            $MaxValue = $Associations[sizeof($Associations)-1][0];
+        }
+        */
+        $this->RegisterProfileFloat($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $Stepsize, $Digits);
+
+        //boolean IPS_SetVariableProfileAssociation ( string $ProfilName, float $Wert, string $Name, string $Icon, integer $Farbe )
+        foreach($Associations as $Association) {
+            IPS_SetVariableProfileAssociation($Name, $Association[0], $Association[1], $Association[2], $Association[3]);
+        }
+
+    }
+
+    //Configuration Form
+    public function GetConfigurationForm()
+    {
+        $formhead = $this->FormHead();
+        $formactions = $this->FormActions();
+        $formelementsend = \'{ "type": "Label", "label": "__________________________________________________________________________________________________" }\';
+        $formstatus = $this->FormStatus();
+        return	\'{ \'.$formhead.$formelementsend.\'],\'.$formactions.$formstatus.\' }\';
+    }
+
+
+    protected function FormHead()
+    {
+        $form = \'"elements":
+            [
+                { "type": "Label", "label": "LabelText" },
+                \';
+
+        return $form;
+    }
+
+    protected function FormActions()
+    {
+        $form = \'"actions":
+			[
+				{ "type": "Label", "label": "Action Label" }
+			],\';
+        return  $form;
+    }
+
+    protected function FormStatus()
+    {
+        $form = \'"status":
+            [
+                {
+                    "code": 101,
+                    "icon": "inactive",
+                    "caption": "Creating instance."
+                },
+				{
+                    "code": 102,
+                    "icon": "active",
+                    "caption": "instance created."
+                },
+                {
+                    "code": 104,
+                    "icon": "inactive",
+                    "caption": "interface closed."
+                },
+                {
+                    "code": 202,
+                    "icon": "error",
+                    "caption": "special errorcode."
+                }
+            ]\';
+        return $form;
+    }	
+		
+}';
             IPS_SetScriptContent($ScriptID, $content);
         }
         return $ScriptID;
