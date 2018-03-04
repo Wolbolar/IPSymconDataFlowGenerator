@@ -735,6 +735,7 @@ class '.$modulename.'Splitter extends IPSModule
         $vendor = $this->ReadPropertyString("vendor");
         $prefix = $this->ReadPropertyString("prefix");
         $aliases = $this->ReadPropertyString("aliases");
+        $modulename = $this->ReadPropertyString("modulename");
 
         $splitterinterface_guid = $guids["splitterinterface_guid"]; // Interface GUI
         $device_guid = $guids["device_guid"];
