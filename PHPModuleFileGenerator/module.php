@@ -495,7 +495,7 @@ GUID: `'.$device_guid.'` ';
 
     protected function CreateIOModuleJSONScript($guids, $ioident, $CategoryID)
     {
-        $vendor = $this->ReadPropertyString("vendor");
+    	$vendor = $this->ReadPropertyString("vendor");
         $prefix = $this->ReadPropertyString("prefix");
         $aliases = $this->ReadPropertyString("aliases");
         $modulename = $this->ReadPropertyString("modulename");
@@ -512,16 +512,16 @@ GUID: `'.$device_guid.'` ';
             IPS_SetName($ScriptID, $Scriptname);
             IPS_SetParent($ScriptID, $CategoryID);
             IPS_SetIdent($ScriptID, $ioident);
-            $content = '{
-    "id": "'.$io_guid.'",
-    "name": "'.$modulename.'IO",
-    "type": 1,
-    "vendor": "'.$vendor.'",
-    "aliases": ["'.$aliases.' I/O"],
-    "parentRequirements": [],
-    "childRequirements": ["'.$rx_guid.'"],
-    "implemented": ["'.$tx_guid.'"],
-    "prefix": "'.$prefix.'IO"
+			$content = '{
+	"id": "'.$io_guid.'",
+	"name": "'.$modulename.'",
+	"type": 3,
+	"vendor": "'.$vendor.'",
+	"aliases": ["'.$aliases.'"],
+	"parentRequirements": [],
+	"childRequirements": ["'.$rx_guid.'"],
+	"implemented": ["'.$tx_guid .'"],
+	"prefix": "'.$prefix.'"
 }';
             IPS_SetScriptContent($ScriptID, $content);
         }
@@ -732,11 +732,14 @@ class '.$modulename.'Splitter extends IPSModule
 
     protected function CreateDeviceModuleJSONScript($guids, $deviceident, $CategoryID)
     {
-        $vendor = $this->ReadPropertyString("vendor");
+		$dataflowtype = $this->ReadPropertyInteger("dataflowtype");
+    	$vendor = $this->ReadPropertyString("vendor");
         $prefix = $this->ReadPropertyString("prefix");
         $aliases = $this->ReadPropertyString("aliases");
-
-        $splitterinterface_guid = $guids["splitterinterface_guid"]; // Interface GUI
+        $modulename = $this->ReadPropertyString("modulename");
+		$tx_guid = $guids["rx_guid"]; // TX
+        $rx_guid = $guids["rx_guid"]; // RX
+		$splitterinterface_guid = $guids["splitterinterface_guid"]; // Interface GUI
         $device_guid = $guids["device_guid"];
         $deviceinterface_guid = $guids["deviceinterface_guid"]; // Interface GUI
 
@@ -749,7 +752,9 @@ class '.$modulename.'Splitter extends IPSModule
             IPS_SetName($ScriptID, $Scriptname);
             IPS_SetParent($ScriptID, $CategoryID);
             IPS_SetIdent($ScriptID, $deviceident);
-            $content = '{
+            if($dataflowtype == 0) // I/O, Splitter
+			{
+				$content = '{
 	"id": "'.$device_guid.'",
 	"name": "'.$modulename.'",
 	"type": 3,
@@ -760,6 +765,35 @@ class '.$modulename.'Splitter extends IPSModule
 	"implemented": ["'.$splitterinterface_guid.'"],
 	"prefix": "'.$prefix.'"
 }';
+			}
+			elseif($dataflowtype == 1) // I/O
+			{
+				$content = '{
+	"id": "'.$device_guid.'",
+	"name": "'.$modulename.'",
+	"type": 3,
+	"vendor": "'.$vendor.'",
+	"aliases": ["'.$aliases.'"],
+	"parentRequirements": ["'.$tx_guid.'"],
+	"childRequirements": [],
+	"implemented": ["'.$rx_guid .'"],
+	"prefix": "'.$prefix.'"
+}';
+			}
+			else{
+				$content = '{
+	"id": "'.$device_guid.'",
+	"name": "'.$modulename.'",
+	"type": 3,
+	"vendor": "'.$vendor.'",
+	"aliases": ["'.$aliases.'"],
+	"parentRequirements": [],
+	"childRequirements": [],
+	"implemented": [],
+	"prefix": "'.$prefix.'"
+}';
+			}
+
             IPS_SetScriptContent($ScriptID, $content);
         }
         return $ScriptID;
@@ -767,8 +801,10 @@ class '.$modulename.'Splitter extends IPSModule
 
     protected function CreateDeviceModulePHPScript($guids, $deviceident, $CategoryID)
     {
-        $modulename = $this->ReadPropertyString("modulename");
-        $splitter_guid = $guids["splitter_guid"];
+		$dataflowtype = $this->ReadPropertyInteger("dataflowtype");
+    	$modulename = $this->ReadPropertyString("modulename");
+		$io_guid = $guids["io_guid"];
+		$splitter_guid = $guids["splitter_guid"];
         $deviceinterface_guid = $guids["deviceinterface_guid"]; // Interface GUI
 
         $Scriptname = "module_php";
@@ -791,9 +827,16 @@ class '.$modulename.' extends IPSModule
         parent::Create();
 		
 		//These lines are parsed on Symcon Startup or Instance creation
-        //You cannot use variables here. Just static values.
-        $this->ConnectParent("'.$splitter_guid.'"); // Splitter
-    }
+        //You cannot use variables here. Just static values.';
+            if($dataflowtype == 0)
+			{
+				$content .= '$this->ConnectParent("'.$splitter_guid.'"); // Splitter';
+			}
+			elseif($dataflowtype == 1)
+			{
+				$content .= '$this->ConnectParent("'.$io_guid.'"); // I/O';
+			}
+    $content .='}
 
     public function ApplyChanges()
     {
@@ -809,138 +852,190 @@ class '.$modulename.' extends IPSModule
 			return $result;
 		}
 		
-	protected function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
-    {
+	/**
+	 * gets current IP-Symcon version
+	 * @return float|int
+	 */
+	protected function GetIPSVersion()
+	{
+		$ipsversion = floatval(IPS_GetKernelVersion());
+		if ($ipsversion < 4.1) // 4.0
+		{
+			$ipsversion = 0;
+		} elseif ($ipsversion >= 4.1 && $ipsversion < 4.2) // 4.1
+		{
+			$ipsversion = 1;
+		} elseif ($ipsversion >= 4.2 && $ipsversion < 4.3) // 4.2
+		{
+			$ipsversion = 2;
+		} elseif ($ipsversion >= 4.3 && $ipsversion < 4.4) // 4.3
+		{
+			$ipsversion = 3;
+		} elseif ($ipsversion >= 4.4 && $ipsversion < 5) // 4.4
+		{
+			$ipsversion = 4;
+		} else   // 5
+		{
+			$ipsversion = 5;
+		}
 
-        if(!IPS_VariableProfileExists($Name)) {
-            IPS_CreateVariableProfile($Name, 1);
-        } else {
-            $profile = IPS_GetVariableProfile($Name);
-            if($profile[\'ProfileType\'] != 1)
-                throw new Exception("Variable profile type does not match for profile ".$Name);
-        }
+		return $ipsversion;
+	}
 
-        IPS_SetVariableProfileIcon($Name, $Icon);
-        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
-        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
+	//Profile
+	protected function RegisterProfile($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits, $Vartype)
+	{
 
-    }
+		if (!IPS_VariableProfileExists($Name)) {
+			IPS_CreateVariableProfile($Name, $Vartype); // 0 boolean, 1 int, 2 float, 3 string,
+		} else {
+			$profile = IPS_GetVariableProfile($Name);
+			if ($profile[\'ProfileType\'] != $Vartype)
+				$this->SendDebug("BMW:", "Variable profile type does not match for profile " . $Name, 0);
+		}
 
-    protected function RegisterProfileIntegerEx($Name, $Icon, $Prefix, $Suffix, $Associations)
-    {
-        if ( sizeof($Associations) === 0 ){
-            $MinValue = 0;
-            $MaxValue = 0;
-        } else {
-            $MinValue = $Associations[0][0];
-            $MaxValue = $Associations[sizeof($Associations)-1][0];
-        }
+		IPS_SetVariableProfileIcon($Name, $Icon);
+		IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+		IPS_SetVariableProfileDigits($Name, $Digits); //  Nachkommastellen
+		IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize); // string $ProfilName, float $Minimalwert, float $Maximalwert, float $Schrittweite
+	}
 
-        $this->RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, 0);
+	protected function RegisterProfileAssociation($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $Stepsize, $Digits, $Vartype, $Associations)
+	{
+		if (sizeof($Associations) === 0) {
+			$MinValue = 0;
+			$MaxValue = 0;
+		}
 
-        foreach($Associations as $Association) {
-            IPS_SetVariableProfileAssociation($Name, $Association[0], $Association[1], $Association[2], $Association[3]);
-        }
+		$this->RegisterProfile($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $Stepsize, $Digits, $Vartype);
 
-    }
+		//boolean IPS_SetVariableProfileAssociation ( string $ProfilName, float $Wert, string $Name, string $Icon, integer $Farbe )
+		foreach ($Associations as $Association) {
+			IPS_SetVariableProfileAssociation($Name, $Association[0], $Association[1], $Association[2], $Association[3]);
+		}
 
-    protected function RegisterProfileFloat($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits)
-    {
+	}
 
-        if(!IPS_VariableProfileExists($Name)) {
-            IPS_CreateVariableProfile($Name, 2);
-        } else {
-            $profile = IPS_GetVariableProfile($Name);
-            if($profile[\'ProfileType\'] != 2)
-                throw new Exception("Variable profile type does not match for profile ".$Name);
-        }
+	/***********************************************************
+	 * Configuration Form
+	 ***********************************************************/
 
-        IPS_SetVariableProfileIcon($Name, $Icon);
-        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
-        IPS_SetVariableProfileDigits($Name, $Digits); //  Nachkommastellen
-        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
+	/**
+	 * build configuration form
+	 * @return string
+	 */
+	public function GetConfigurationForm()
+	{
+		// return current form
+		return json_encode([
+			\'elements\' => $this->FormHead(),
+			\'actions\' => $this->FormActions(),
+			\'status\' => $this->FormStatus()
+		]);
+	}
 
-    }
-
-    protected function RegisterProfileFloatAss($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $Stepsize, $Digits, $Associations)
-    {
-        if ( sizeof($Associations) === 0 ){
-            $MinValue = 0;
-            $MaxValue = 0;
-        }
-        /*
-        else {
-            //undefiened offset
-            $MinValue = $Associations[0][0];
-            $MaxValue = $Associations[sizeof($Associations)-1][0];
-        }
-        */
-        $this->RegisterProfileFloat($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $Stepsize, $Digits);
-
-        //boolean IPS_SetVariableProfileAssociation ( string $ProfilName, float $Wert, string $Name, string $Icon, integer $Farbe )
-        foreach($Associations as $Association) {
-            IPS_SetVariableProfileAssociation($Name, $Association[0], $Association[1], $Association[2], $Association[3]);
-        }
-
-    }
-
-    //Configuration Form
-    public function GetConfigurationForm()
-    {
-        $formhead = $this->FormHead();
-        $formactions = $this->FormActions();
-        $formelementsend = \'{ "type": "Label", "label": "__________________________________________________________________________________________________" }\';
-        $formstatus = $this->FormStatus();
-        return	\'{ \'.$formhead.$formelementsend.\'],\'.$formactions.$formstatus.\' }\';
-    }
-
-
-    protected function FormHead()
-    {
-        $form = \'"elements":
-            [
-                { "type": "Label", "label": "LabelText" },
-                \';
-
-        return $form;
-    }
-
-    protected function FormActions()
-    {
-        $form = \'"actions":
+	/**
+	 * return form configurations on configuration step
+	 * @return array
+	 */
+	protected function FormHead()
+	{
+		$form = [
 			[
-				{ "type": "Label", "label": "Action Label" }
-			],\';
-        return  $form;
-    }
+				\'name\' => \'devicetype\',
+				\'type\' => \'Select\',
+				\'caption\' => \'device type\',
+				\'options\' => [
+					[
+						\'label\' => \'Please choose\',
+						\'value\' => -1
+					],
+					[
+						\'label\' => \'Type 1\',
+						\'value\' => 0
+					],
+					[
+						\'label\' => \'Type 2\',
+						\'value\' => 1
+					]
+				]
+			],
+			[
+				\'type\' => \'Label\',
+				\'label\' => \'IP adress\'
+			],
+			[
+				\'name\' => \'ip\',
+				\'type\' => \'ValidationTextBox\',
+				\'caption\' => \'IP adress\'
+			]
+		];
+		return $form;
+	}
 
-    protected function FormStatus()
-    {
-        $form = \'"status":
-            [
-                {
-                    "code": 101,
-                    "icon": "inactive",
-                    "caption": "Creating instance."
-                },
-				{
-                    "code": 102,
-                    "icon": "active",
-                    "caption": "instance created."
-                },
-                {
-                    "code": 104,
-                    "icon": "inactive",
-                    "caption": "interface closed."
-                },
-                {
-                    "code": 202,
-                    "icon": "error",
-                    "caption": "special errorcode."
-                }
-            ]\';
-        return $form;
-    }	
+	/**
+	 * return form actions
+	 * @return array
+	 */
+	protected function FormActions()
+	{
+		$form = [
+			[
+				\'type\' => \'Label\',
+				\'label\' => \'Update\'
+			],
+			[
+				\'type\' => \'Button\',
+				\'label\' => \'labelname\',
+				\'onClick\' => \'Prefix_Functionname($id);\'
+			]
+		];
+
+		return $form;
+	}
+
+	/**
+	 * return from status
+	 * @return array
+	 */
+	protected function FormStatus()
+	{
+		$form = [
+			[
+				\'code\' => 101,
+				\'icon\' => \'inactive\',
+				\'caption\' => \'Creating instance.\'
+			],
+			[
+				\'code\' => 102,
+				\'icon\' => \'active\',
+				\'caption\' => \'Device created.\'
+			],
+			[
+				\'code\' => 104,
+				\'icon\' => \'inactive\',
+				\'caption\' => \'interface closed.\'
+			],
+			[
+				\'code\' => 201,
+				\'icon\' => \'error\',
+				\'caption\' => \'special errorcode\'
+			]
+		];
+
+		return $form;
+	}
+
+	//Add this Polyfill for IP-Symcon 4.4 and older
+	protected function SetValue($Ident, $Value)
+	{
+
+		if (IPS_GetKernelVersion() >= 5) {
+			parent::SetValue($Ident, $Value);
+		} else {
+			SetValue($this->GetIDForIdent($Ident), $Value);
+		}
+	}
 		
 }';
             IPS_SetScriptContent($ScriptID, $content);
@@ -967,69 +1062,71 @@ class '.$modulename.' extends IPSModule
                 throw new Exception("Invalid ident");
         }
     }
-	
-	//Profile
-	protected function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits)
-	{
-        
-        if(!IPS_VariableProfileExists($Name)) {
-            IPS_CreateVariableProfile($Name, 1);
-        } else {
-            $profile = IPS_GetVariableProfile($Name);
-            if($profile['ProfileType'] != 1)
-            throw new Exception("Variable profile type does not match for profile ".$Name);
-        }
-        
-        IPS_SetVariableProfileIcon($Name, $Icon);
-        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
-		IPS_SetVariableProfileDigits($Name, $Digits); //  Nachkommastellen
-        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize); // string $ProfilName, float $Minimalwert, float $Maximalwert, float $Schrittweite
-        
-    }
-	
-	protected function RegisterProfileIntegerAss($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $Stepsize, $Digits, $Associations)
-	{
-        if ( sizeof($Associations) === 0 ){
-            $MinValue = 0;
-            $MaxValue = 0;
-        } 
-		/*
-		else {
-            //undefiened offset
-			$MinValue = $Associations[0][0];
-            $MaxValue = $Associations[sizeof($Associations)-1][0];
-        }
-        */
-        $this->RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $Stepsize, $Digits);
-        
-		//boolean IPS_SetVariableProfileAssociation ( string $ProfilName, float $Wert, string $Name, string $Icon, integer $Farbe )
-        foreach($Associations as $Association) {
-            IPS_SetVariableProfileAssociation($Name, $Association[0], $Association[1], $Association[2], $Association[3]);
-        }
-        
-    }
 
-	
-	protected function GetIPSVersion ()
+	/**
+	 * gets current IP-Symcon version
+	 * @return float|int
+	 */
+	protected function GetIPSVersion()
+	{
+		$ipsversion = floatval(IPS_GetKernelVersion());
+		if ($ipsversion < 4.1) // 4.0
 		{
-			$ipsversion = IPS_GetKernelVersion ( );
-			$ipsversion = explode( ".", $ipsversion);
-			// $ipsmajor = intval($ipsversion[0]);
-			$ipsminor = intval($ipsversion[1]);
-			if($ipsminor < 10) // 4.0
-			{
-				$ipsversion = 0;
-			}
-			elseif ($ipsminor >= 10 && $ipsminor < 20) // 4.1
-			{
-				$ipsversion = 1;
-			}
-			else   // > 4.2
-			{
-				$ipsversion = 2;
-			}
-			return $ipsversion;
+			$ipsversion = 0;
+		} elseif ($ipsversion >= 4.1 && $ipsversion < 4.2) // 4.1
+		{
+			$ipsversion = 1;
+		} elseif ($ipsversion >= 4.2 && $ipsversion < 4.3) // 4.2
+		{
+			$ipsversion = 2;
+		} elseif ($ipsversion >= 4.3 && $ipsversion < 4.4) // 4.3
+		{
+			$ipsversion = 3;
+		} elseif ($ipsversion >= 4.4 && $ipsversion < 5) // 4.4
+		{
+			$ipsversion = 4;
+		} else   // 5
+		{
+			$ipsversion = 5;
 		}
+
+		return $ipsversion;
+	}
+
+	//Profile
+	protected function RegisterProfile($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits, $Vartype)
+	{
+
+		if (!IPS_VariableProfileExists($Name)) {
+			IPS_CreateVariableProfile($Name, $Vartype); // 0 boolean, 1 int, 2 float, 3 string,
+		} else {
+			$profile = IPS_GetVariableProfile($Name);
+			if ($profile['ProfileType'] != $Vartype)
+				$this->SendDebug("BMW:", "Variable profile type does not match for profile " . $Name, 0);
+		}
+
+		IPS_SetVariableProfileIcon($Name, $Icon);
+		IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+		IPS_SetVariableProfileDigits($Name, $Digits); //  Nachkommastellen
+		IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize); // string $ProfilName, float $Minimalwert, float $Maximalwert, float $Schrittweite
+	}
+
+	protected function RegisterProfileAssociation($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $Stepsize, $Digits, $Vartype, $Associations)
+	{
+		if (sizeof($Associations) === 0) {
+			$MinValue = 0;
+			$MaxValue = 0;
+		}
+
+		$this->RegisterProfile($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $Stepsize, $Digits, $Vartype);
+
+		//boolean IPS_SetVariableProfileAssociation ( string $ProfilName, float $Wert, string $Name, string $Icon, integer $Farbe )
+		foreach ($Associations as $Association) {
+			IPS_SetVariableProfileAssociation($Name, $Association[0], $Association[1], $Association[2], $Association[3]);
+		}
+
+	}
+
 
     //Configuration Form
 
@@ -1080,7 +1177,8 @@ class '.$modulename.' extends IPSModule
                 { "type": "Select", "name": "dataflowtype", "caption": "Dataflow Type",
                   "options": [
                     { "label": "IO / Splitter / Device", "value": 0 },
-                    { "label": "IO / Device", "value": 1 }
+                    { "label": "IO / Device", "value": 1 },
+                    { "label": "Device", "value": 2 }
                   ]
                 },
                 { "type": "Label", "label": "Use own IO or standard IP-Symcon IO" },
