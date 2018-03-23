@@ -294,19 +294,19 @@ class DataFlowGenerator extends IPSModule
 
     protected function GetIOGUID($typeio)
     {
-        if($typeio == 1) // Multicast Socket
+        if($typeio == 1) // Multicast Socket (Virtual I/O)
         {
             $io_guid = $this->ReadPropertyString("io_multicast_guid");
             $rx_guid = $this->ReadPropertyString("virtual_io_rx_guid");
             $tx_guid = $this->ReadPropertyString("virtual_io_tx_guid");
         }
-        elseif ($typeio == 2) // Server Socket
+        elseif ($typeio == 2) // Server Socket (Virtual I/O)
         {
             $io_guid = $this->ReadPropertyString("io_serversocket_guid");
-            $rx_guid = $this->ReadPropertyString("server_rx_guid");
-            $tx_guid = $this->ReadPropertyString("server_tx_guid");
+			$rx_guid = $this->ReadPropertyString("virtual_io_rx_guid");
+			$tx_guid = $this->ReadPropertyString("virtual_io_tx_guid");
         }
-        elseif ($typeio == 3) // UDP Socket
+        elseif ($typeio == 3) // UDP Socket (Virtual I/O)
         {
             $io_guid = $this->ReadPropertyString("io_udpsocket_guid");
             $rx_guid = $this->ReadPropertyString("virtual_io_rx_guid");
@@ -330,6 +330,36 @@ class DataFlowGenerator extends IPSModule
             $rx_guid = $this->ReadPropertyString("www_reader_rx_guid");
             $tx_guid = $this->ReadPropertyString("www_reader_tx_guid");
         }
+		elseif ($typeio == 5) // WWW Reader
+		{
+			$io_guid = $this->ReadPropertyString("io_wwwreader_guid");
+			$rx_guid = $this->ReadPropertyString("www_reader_rx_guid");
+			$tx_guid = $this->ReadPropertyString("www_reader_tx_guid");
+		}
+		elseif ($typeio == 6) // WWW Reader
+		{
+			$io_guid = $this->ReadPropertyString("io_wwwreader_guid");
+			$rx_guid = $this->ReadPropertyString("www_reader_rx_guid");
+			$tx_guid = $this->ReadPropertyString("www_reader_tx_guid");
+		}
+		elseif ($typeio == 7) // Multicast Socket
+		{
+			$io_guid = $this->ReadPropertyString("io_multicast_guid");
+			$rx_guid = $this->ReadPropertyString("server_rx_guid");
+			$tx_guid = $this->ReadPropertyString("server_tx_guid");
+		}
+		elseif ($typeio == 8) // Server Socket
+		{
+			$io_guid = $this->ReadPropertyString("io_serversocket_guid");
+			$rx_guid = $this->ReadPropertyString("server_rx_guid");
+			$tx_guid = $this->ReadPropertyString("server_tx_guid");
+		}
+		elseif ($typeio == 9) // UDP Socket
+		{
+			$io_guid = $this->ReadPropertyString("io_udpsocket_guid");
+			$rx_guid = $this->ReadPropertyString("server_rx_guid");
+			$tx_guid = $this->ReadPropertyString("server_tx_guid");
+		}
         else // Clientsocket
         {
             $io_guid = $this->ReadPropertyString("io_clientsocket_guid");
@@ -1201,12 +1231,15 @@ class '.$modulename.' extends IPSModule
                 { "type": "Select", "name": "typeio", "caption": "IO type",
                   "options": [
                     { "label": "Clientsocket", "value": 0 },
-                    { "label": "Multicast Socket", "value": 1 },
-                    { "label": "Server Socket", "value": 2 },
-                    { "label": "UDP Socket", "value": 3 },
+                    { "label": "Multicast Socket (Virtual I/O)", "value": 1 },
+                    { "label": "Server Socket (Virtual I/O)", "value": 2 },
+                    { "label": "UDP Socket (Virtual I/O)", "value": 3 },
                     { "label": "Serial Port", "value": 4 },
                     { "label": "HID", "value": 5 },
-                    { "label": "WWW Reader", "value": 6 }
+                    { "label": "WWW Reader", "value": 6 },
+                    { "label": "Multicast Socket", "value": 7 },
+                    { "label": "Server Socket", "value": 8 },
+                    { "label": "UDP Socket", "value": 9 }
                   ]
                 },';
         }
