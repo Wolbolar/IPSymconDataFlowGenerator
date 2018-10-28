@@ -3,394 +3,365 @@
 class DataFlowGenerator extends IPSModule
 {
 
-    public function Create()
-    {
+	public function Create()
+	{
 //Never delete this line!
-        parent::Create();
-		
+		parent::Create();
+
 		//These lines are parsed on Symcon Startup or Instance creation
-        //You cannot use variables here. Just static values.
-        $this->RegisterPropertyString("author", "");
-        $this->RegisterPropertyString("modulename", "");
-        $this->RegisterPropertyString("url", "");
-        $this->RegisterPropertyString("version", "0.1");
-        $this->RegisterPropertyInteger("build", 0);
-        $this->RegisterPropertyInteger("CategoryID", 0);
-        $this->RegisterPropertyInteger("generateguid", 0);
-        $this->RegisterPropertyString("library_guid", "");
-        $this->RegisterPropertyString("io_guid", "");
-        $this->RegisterPropertyString("rx_guid", "");
-        $this->RegisterPropertyString("tx_guid", "");
-        $this->RegisterPropertyString("splitter_guid", "");
-        $this->RegisterPropertyString("splitterinterface_guid", "");
-        $this->RegisterPropertyString("device_guid", "");
-        $this->RegisterPropertyString("deviceinterface_guid", "");
-        $this->RegisterPropertyString("vendor", "");
-        $this->RegisterPropertyString("prefix", "");
-        $this->RegisterPropertyString("aliases", "");
-        $this->RegisterPropertyInteger("ownio", 0);
-        $this->RegisterPropertyInteger("typeio", 0);
-        $this->RegisterPropertyInteger("dataflowtype", 0);
-        $this->RegisterPropertyString("virtual_io_rx_guid", "{018EF6B5-AB94-40C6-AA53-46943E824ACF}"); // Kann für die Kommunikation von ClientSocket, MulticastSocket, SerialPort, UDPSocket und ServerSocket (nur Buffer) genutzt werden
-        $this->RegisterPropertyString("virtual_io_tx_guid", "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}"); // Kann für die Kommunikation von ClientSocket, MulticastSocket, SerialPort, UDPSocket und ServerSocket (nur Buffer) genutzt werden
-        $this->RegisterPropertyString("hid_rx_guid", "{FD7FF32C-331E-4F6B-8BA8-F73982EF5AA7}"); // Kann für HID (Human Interface Device) Instanzen genutzt werden
-        $this->RegisterPropertyString("hid_tx_guid", "{4A550680-80C5-4465-971E-BBF83205A02B}"); // Kann für HID (Human Interface Device) Instanzen genutzt werden
-        $this->RegisterPropertyString("server_rx_guid", "{7A1272A4-CBDB-46EF-BFC6-DCF4A53D2FC7}"); // Kann für ServerSocket genutzt werden. Liefert Buffer, ClientIP und ClientPort
-        $this->RegisterPropertyString("server_tx_guid", "{C8792760-65CF-4C53-B5C7-A30FCC84FEFE}"); // Kann für ServerSocket genutzt werden. Liefert Buffer, ClientIP und ClientPort
-        $this->RegisterPropertyString("www_reader_rx_guid", "{4CB91589-CE01-4700-906F-26320EFCF6C4}"); // Kann für WWW Reader Instanzen genutzt werden
-        $this->RegisterPropertyString("www_reader_tx_guid", "{D4C1D08F-CD3B-494B-BE18-B36EF73B8F43}"); // Kann für WWW Reader Instanzen genutzt werden
-        $this->RegisterPropertyString("io_clientsocket_guid", "{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}"); // Client Socket
-        $this->RegisterPropertyString("io_multicast_guid", "{BAB408E0-0A0F-48C3-B14E-9FB2FA81F66A}"); // MulticastSocket
-        $this->RegisterPropertyString("io_serialport_guid", "{6DC3D946-0D31-450F-A8C6-C42DB8D7D4F1}"); // SerialPort
-        $this->RegisterPropertyString("io_serversocket_guid", "{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}"); // Server Socket
-        $this->RegisterPropertyString("io_udpsocket_guid", "{82347F20-F541-41E1-AC5B-A636FD3AE2D8}"); // UDPSocket
-        $this->RegisterPropertyString("io_hid_guid", "{E6D7692A-7F4C-441D-827B-64062CFE1C02}"); // HID
-        $this->RegisterPropertyString("io_wwwreader_guid", "{4CB91589-CE01-4700-906F-26320EFCF6C4}"); // WWW Reader
-    }
+		//You cannot use variables here. Just static values.
+		$this->RegisterPropertyString("author", "");
+		$this->RegisterPropertyString("modulename", "");
+		$this->RegisterPropertyString("url", "");
+		$this->RegisterPropertyString("version", "0.1");
+		$this->RegisterPropertyInteger("build", 0);
+		$this->RegisterPropertyInteger("CategoryID", 0);
+		$this->RegisterPropertyInteger("generateguid", 0);
+		$this->RegisterPropertyString("library_guid", "");
+		$this->RegisterPropertyString("io_guid", "");
+		$this->RegisterPropertyString("rx_guid", "");
+		$this->RegisterPropertyString("tx_guid", "");
+		$this->RegisterPropertyString("splitter_guid", "");
+		$this->RegisterPropertyString("splitterinterface_guid", "");
+		$this->RegisterPropertyString("device_guid", "");
+		$this->RegisterPropertyString("deviceinterface_guid", "");
+		$this->RegisterPropertyString("vendor", "");
+		$this->RegisterPropertyString("prefix", "");
+		$this->RegisterPropertyString("aliases", "");
+		$this->RegisterPropertyInteger("ownio", 0);
+		$this->RegisterPropertyInteger("typeio", 0);
+		$this->RegisterPropertyInteger("dataflowtype", 0);
+		$this->RegisterPropertyString("virtual_io_rx_guid", "{018EF6B5-AB94-40C6-AA53-46943E824ACF}"); // Kann für die Kommunikation von ClientSocket, MulticastSocket, SerialPort, UDPSocket und ServerSocket (nur Buffer) genutzt werden
+		$this->RegisterPropertyString("virtual_io_tx_guid", "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}"); // Kann für die Kommunikation von ClientSocket, MulticastSocket, SerialPort, UDPSocket und ServerSocket (nur Buffer) genutzt werden
+		$this->RegisterPropertyString("hid_rx_guid", "{FD7FF32C-331E-4F6B-8BA8-F73982EF5AA7}"); // Kann für HID (Human Interface Device) Instanzen genutzt werden
+		$this->RegisterPropertyString("hid_tx_guid", "{4A550680-80C5-4465-971E-BBF83205A02B}"); // Kann für HID (Human Interface Device) Instanzen genutzt werden
+		$this->RegisterPropertyString("server_rx_guid", "{7A1272A4-CBDB-46EF-BFC6-DCF4A53D2FC7}"); // Kann für ServerSocket genutzt werden. Liefert Buffer, ClientIP und ClientPort
+		$this->RegisterPropertyString("server_tx_guid", "{C8792760-65CF-4C53-B5C7-A30FCC84FEFE}"); // Kann für ServerSocket genutzt werden. Liefert Buffer, ClientIP und ClientPort
+		$this->RegisterPropertyString("www_reader_rx_guid", "{4CB91589-CE01-4700-906F-26320EFCF6C4}"); // Kann für WWW Reader Instanzen genutzt werden
+		$this->RegisterPropertyString("www_reader_tx_guid", "{D4C1D08F-CD3B-494B-BE18-B36EF73B8F43}"); // Kann für WWW Reader Instanzen genutzt werden
+		$this->RegisterPropertyString("io_clientsocket_guid", "{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}"); // Client Socket
+		$this->RegisterPropertyString("io_multicast_guid", "{BAB408E0-0A0F-48C3-B14E-9FB2FA81F66A}"); // MulticastSocket
+		$this->RegisterPropertyString("io_serialport_guid", "{6DC3D946-0D31-450F-A8C6-C42DB8D7D4F1}"); // SerialPort
+		$this->RegisterPropertyString("io_serversocket_guid", "{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}"); // Server Socket
+		$this->RegisterPropertyString("io_udpsocket_guid", "{82347F20-F541-41E1-AC5B-A636FD3AE2D8}"); // UDPSocket
+		$this->RegisterPropertyString("io_hid_guid", "{E6D7692A-7F4C-441D-827B-64062CFE1C02}"); // HID
+		$this->RegisterPropertyString("io_wwwreader_guid", "{4CB91589-CE01-4700-906F-26320EFCF6C4}"); // WWW Reader
+	}
 
-    public function ApplyChanges()
-    {
-	//Never delete this line!
-        parent::ApplyChanges();
+	public function ApplyChanges()
+	{
+		//Never delete this line!
+		parent::ApplyChanges();
 
-        $this->RegisterVariableString ( "GUID", "GUID", "~HTMLBox", 0 );
+		$this->RegisterVariableString("GUID", "GUID", "~HTMLBox", 0);
 		$this->ValidateConfiguration();
-	
-    }
 
-		/**
-        * Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" eingefügt wurden.
-        * Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wiefolgt zur Verfügung gestellt:
-        *
-        *
-        */
-		
+	}
+
+	/**
+	 * Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" eingefügt wurden.
+	 * Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wiefolgt zur Verfügung gestellt:
+	 *
+	 *
+	 */
+
 	private function ValidateConfiguration()
 	{
-        $author = $this->ReadPropertyString("author");
-        $modulename = $this->ReadPropertyString("modulename");
-        $url = $this->ReadPropertyString("url");
-        $version = $this->ReadPropertyString("version");
-        // $build = $this->ReadPropertyInteger("build");
-        $ModuleCategoryID = $this->ReadPropertyInteger("CategoryID");
-        $generateguid = $this->ReadPropertyInteger("generateguid");
-        $library_guid = $this->ReadPropertyString("library_guid");
-        $io_guid = $this->ReadPropertyString("io_guid");
-        $rx_guid = $this->ReadPropertyString("rx_guid");
-        $tx_guid = $this->ReadPropertyString("tx_guid");
-        $splitter_guid = $this->ReadPropertyString("splitter_guid");
-        $splitterinterface_guid = $this->ReadPropertyString("splitterinterface_guid"); // Interface GUI
-        $device_guid = $this->ReadPropertyString("device_guid");
-        $deviceinterface_guid = $this->ReadPropertyString("deviceinterface_guid"); // Interface GUI
-        $vendor = $this->ReadPropertyString("vendor");
-        $prefix = $this->ReadPropertyString("prefix");
-        $aliases = $this->ReadPropertyString("aliases");
-        $ownio = $this->ReadPropertyInteger("ownio");
-        $dataflowtype = $this->ReadPropertyInteger("dataflowtype");
+		$author = $this->ReadPropertyString("author");
+		$modulename = $this->ReadPropertyString("modulename");
+		$url = $this->ReadPropertyString("url");
+		$version = $this->ReadPropertyString("version");
+		// $build = $this->ReadPropertyInteger("build");
+		$ModuleCategoryID = $this->ReadPropertyInteger("CategoryID");
+		$generateguid = $this->ReadPropertyInteger("generateguid");
+		$library_guid = $this->ReadPropertyString("library_guid");
+		$io_guid = $this->ReadPropertyString("io_guid");
+		$rx_guid = $this->ReadPropertyString("rx_guid");
+		$tx_guid = $this->ReadPropertyString("tx_guid");
+		$splitter_guid = $this->ReadPropertyString("splitter_guid");
+		$splitterinterface_guid = $this->ReadPropertyString("splitterinterface_guid"); // Interface GUI
+		$device_guid = $this->ReadPropertyString("device_guid");
+		$deviceinterface_guid = $this->ReadPropertyString("deviceinterface_guid"); // Interface GUI
+		$vendor = $this->ReadPropertyString("vendor");
+		$prefix = $this->ReadPropertyString("prefix");
+		$aliases = $this->ReadPropertyString("aliases");
+		$ownio = $this->ReadPropertyInteger("ownio");
+		$dataflowtype = $this->ReadPropertyInteger("dataflowtype");
 
-        if ($author == "" || $modulename == "" || $url == "" || $version == "" || $vendor == "" || $prefix == "" || $aliases == "")
-        {
-            $this->SetStatus(202);
-        }
-        if($ModuleCategoryID == 0)
-        {
-            $this->SetStatus(206);
-        }
-        if($generateguid == 1) // Existing GUID
-        {
-            if(($dataflowtype == 1) && ($splitter_guid == "" || $splitterinterface_guid == ""))
-            {
-                $this->SetStatus(202);
-            }
+		if ($author == "" || $modulename == "" || $url == "" || $version == "" || $vendor == "" || $prefix == "" || $aliases == "") {
+			$this->SetStatus(202);
+		}
+		if ($ModuleCategoryID == 0) {
+			$this->SetStatus(206);
+		}
+		if ($generateguid == 1) // Existing GUID
+		{
+			if (($dataflowtype == 1) && ($splitter_guid == "" || $splitterinterface_guid == "")) {
+				$this->SetStatus(202);
+			}
 
-            if($library_guid == "" || $device_guid == "" || $deviceinterface_guid == "")
-            {
-                $this->SetStatus(202);
-            }
+			if ($library_guid == "" || $device_guid == "" || $deviceinterface_guid == "") {
+				$this->SetStatus(202);
+			}
 
-            if($ownio == 1)
-            {
-                if($io_guid == "" || $rx_guid == "" || $tx_guid == "")
-                {
-                    $this->SetStatus(205);
-                }
-            }
-        }
+			if ($ownio == 1) {
+				if ($io_guid == "" || $rx_guid == "" || $tx_guid == "") {
+					$this->SetStatus(205);
+				}
+			}
+		}
 
-				// Status Aktiv
-				$this->SetStatus(102);	
+		// Status Aktiv
+		$this->SetStatus(102);
 
 	}
 
 	public function GenerateGUID()
-    {
-        $ownio = $this->ReadPropertyInteger("ownio");
-        $library_guid = $this->getGUID(); // Verweis im Überverzeichnis
-        $dataflowtype = $this->ReadPropertyInteger("dataflowtype");
-        if($ownio == 1)
-        {
-            $io_guid = $this->getGUID(); //
-            $rx_guid = $this->getGUID(); //
-            $tx_guid = $this->getGUID(); //
-        }
-        else
-        {
-            $typeio = $this->ReadPropertyInteger("typeio");
-            $ioguids = $this->GetIOGUID($typeio);
-            $io_guid = $ioguids["io_guid"];
-            $rx_guid = $ioguids["rx_guid"];
-            $tx_guid = $ioguids["tx_guid"];
+	{
+		$ownio = $this->ReadPropertyInteger("ownio");
+		$library_guid = $this->getGUID(); // Verweis im Überverzeichnis
+		$dataflowtype = $this->ReadPropertyInteger("dataflowtype");
+		if ($ownio == 1) {
+			$io_guid = $this->getGUID(); //
+			$rx_guid = $this->getGUID(); //
+			$tx_guid = $this->getGUID(); //
+		} else {
+			$typeio = $this->ReadPropertyInteger("typeio");
+			$ioguids = $this->GetIOGUID($typeio);
+			$io_guid = $ioguids["io_guid"];
+			$rx_guid = $ioguids["rx_guid"];
+			$tx_guid = $ioguids["tx_guid"];
 
-        }
-        $splitter_guid = $this->getGUID(); //
-        $splitterinterface_guid = $this->getGUID(); // Interface GUI
-        $device_guid = $this->getGUID(); //
-        $deviceinterface_guid = $this->getGUID(); // Interface GUI
-        $guids = array ("library_guid" => $library_guid, "io_guid" => $io_guid, "rx_guid" => $rx_guid, "tx_guid" => $tx_guid, "splitter_guid" => $splitter_guid, "splitterinterface_guid" => $splitterinterface_guid, "device_guid" => $device_guid, "deviceinterface_guid" => $deviceinterface_guid);
-        $wfguidid = $this->GetIDForIdent("GUID");
-        $content = '<table>
-<tr><td>Library GUID</td><td>'.$library_guid.'</td></tr>
-<tr><td>IO GUID</td><td>'.$io_guid.'</td></tr>
-<tr><td>RX GUID</td><td>'.$rx_guid.'</td></tr>
-<tr><td>TX GUID</td><td>'.$tx_guid.'</td></tr>';
-        if($dataflowtype == 0)
-        {
-            $content .= '<tr><td>Splitter GUID</td><td>'.$splitter_guid.'</td></tr>
-<tr><td>Splitter Interface GUID</td><td>'.$splitterinterface_guid.'</td></tr>';
-        }
-        $content .= '<tr><td>Device GUID</td><td>'.$device_guid.'</td></tr>
-<tr><td>Device Interface GUID</td><td>'.$deviceinterface_guid.'</td></tr>
+		}
+		$splitter_guid = $this->getGUID(); //
+		$splitterinterface_guid = $this->getGUID(); // Interface GUI
+		$device_guid = $this->getGUID(); //
+		$deviceinterface_guid = $this->getGUID(); // Interface GUI
+		$guids = array("library_guid" => $library_guid, "io_guid" => $io_guid, "rx_guid" => $rx_guid, "tx_guid" => $tx_guid, "splitter_guid" => $splitter_guid, "splitterinterface_guid" => $splitterinterface_guid, "device_guid" => $device_guid, "deviceinterface_guid" => $deviceinterface_guid);
+		$wfguidid = $this->GetIDForIdent("GUID");
+		$content = '<table>
+<tr><td>Library GUID</td><td>' . $library_guid . '</td></tr>
+<tr><td>IO GUID</td><td>' . $io_guid . '</td></tr>
+<tr><td>RX GUID</td><td>' . $rx_guid . '</td></tr>
+<tr><td>TX GUID</td><td>' . $tx_guid . '</td></tr>';
+		if ($dataflowtype == 0) {
+			$content .= '<tr><td>Splitter GUID</td><td>' . $splitter_guid . '</td></tr>
+<tr><td>Splitter Interface GUID</td><td>' . $splitterinterface_guid . '</td></tr>';
+		}
+		$content .= '<tr><td>Device GUID</td><td>' . $device_guid . '</td></tr>
+<tr><td>Device Interface GUID</td><td>' . $deviceinterface_guid . '</td></tr>
 </table>';
-        SetValue($wfguidid, $content);
+		SetValue($wfguidid, $content);
 
-        return $guids;
-    }
+		return $guids;
+	}
 
 	protected function getGUID()
-    {
-        if (function_exists('com_create_guid'))
-            {
-                return com_create_guid();
-            }
-        else
-            {
-            mt_srand((double)microtime()*10000);//optional for php 4.2.0 and up.
-            $charid = strtoupper(md5(uniqid(rand(), true)));
-            $hyphen = chr(45);// "-"
-            $uuid = chr(123)// "{"
-                .substr($charid, 0, 8).$hyphen
-                .substr($charid, 8, 4).$hyphen
-                .substr($charid,12, 4).$hyphen
-                .substr($charid,16, 4).$hyphen
-                .substr($charid,20,12)
-                .chr(125);// "}"
-            return $uuid;
-            }
-    }
+	{
+		if (function_exists('com_create_guid')) {
+			return com_create_guid();
+		} else {
+			mt_srand((double)microtime() * 10000);//optional for php 4.2.0 and up.
+			$charid = strtoupper(md5(uniqid(rand(), true)));
+			$hyphen = chr(45);// "-"
+			$uuid = chr(123)// "{"
+				. substr($charid, 0, 8) . $hyphen
+				. substr($charid, 8, 4) . $hyphen
+				. substr($charid, 12, 4) . $hyphen
+				. substr($charid, 16, 4) . $hyphen
+				. substr($charid, 20, 12)
+				. chr(125);// "}"
+			return $uuid;
+		}
+	}
 
-    public function CreateScripts()
-    {
-        $generateguid = $this->ReadPropertyInteger("generateguid");
-        $aliases = $this->ReadPropertyString("aliases");
-        $ownio = $this->ReadPropertyInteger("ownio");
-        $dataflowtype = $this->ReadPropertyInteger("dataflowtype");
-        if ($generateguid == 1)
-        {
-            // GUID übernehmen
-            $library_guid = $this->ReadPropertyString("library_guid");
-            $io_guid = $this->ReadPropertyString("io_guid");
-            $rx_guid = $this->ReadPropertyString("rx_guid");
-            $tx_guid = $this->ReadPropertyString("tx_guid");
-            $splitter_guid = $this->ReadPropertyString("splitter_guid");
-            $splitterinterface_guid = $this->ReadPropertyString("splitterinterface_guid"); // Interface GUI
-            $device_guid = $this->ReadPropertyString("device_guid");
-            $deviceinterface_guid = $this->ReadPropertyString("deviceinterface_guid"); // Interface GUI
+	public function CreateScripts()
+	{
+		$generateguid = $this->ReadPropertyInteger("generateguid");
+		$aliases = $this->ReadPropertyString("aliases");
+		$ownio = $this->ReadPropertyInteger("ownio");
+		$dataflowtype = $this->ReadPropertyInteger("dataflowtype");
+		if ($generateguid == 1) {
+			// GUID übernehmen
+			$library_guid = $this->ReadPropertyString("library_guid");
+			$io_guid = $this->ReadPropertyString("io_guid");
+			$rx_guid = $this->ReadPropertyString("rx_guid");
+			$tx_guid = $this->ReadPropertyString("tx_guid");
+			$splitter_guid = $this->ReadPropertyString("splitter_guid");
+			$splitterinterface_guid = $this->ReadPropertyString("splitterinterface_guid"); // Interface GUI
+			$device_guid = $this->ReadPropertyString("device_guid");
+			$deviceinterface_guid = $this->ReadPropertyString("deviceinterface_guid"); // Interface GUI
 
-        }
-        else
-        {
-            // GUID anlegen
-            $library_guid = $this->getGUID(); // Verweis im Überverzeichnis
-            $io_guid = $this->getGUID(); //
-            $rx_guid = $this->getGUID(); //
-            $tx_guid = $this->getGUID(); //
-            $splitter_guid = $this->getGUID(); //
-            $splitterinterface_guid = $this->getGUID(); // Interface GUI
-            $device_guid = $this->getGUID(); //
-            $deviceinterface_guid = $this->getGUID(); // Interface GUI
-        }
-        $guids = array ("library_guid" => $library_guid, "io_guid" => $io_guid, "rx_guid" => $rx_guid, "tx_guid" => $tx_guid, "splitter_guid" => $splitter_guid, "splitterinterface_guid" => $splitterinterface_guid, "device_guid" => $device_guid, "deviceinterface_guid" => $deviceinterface_guid);
-        $this->CreateLibraryJSON($guids);
-        $this->CreateReadme($guids);
-        if($ownio == 1)
-        {
-            $this->CreateIO($guids);
-        }
-        if($dataflowtype == 0)
-        {
-            $this->CreateSplitter($guids);
-        }
-        $this->CreateDevice($guids);
-    }
+		} else {
+			// GUID anlegen
+			$library_guid = $this->getGUID(); // Verweis im Überverzeichnis
+			$io_guid = $this->getGUID(); //
+			$rx_guid = $this->getGUID(); //
+			$tx_guid = $this->getGUID(); //
+			$splitter_guid = $this->getGUID(); //
+			$splitterinterface_guid = $this->getGUID(); // Interface GUI
+			$device_guid = $this->getGUID(); //
+			$deviceinterface_guid = $this->getGUID(); // Interface GUI
+		}
+		$guids = array("library_guid" => $library_guid, "io_guid" => $io_guid, "rx_guid" => $rx_guid, "tx_guid" => $tx_guid, "splitter_guid" => $splitter_guid, "splitterinterface_guid" => $splitterinterface_guid, "device_guid" => $device_guid, "deviceinterface_guid" => $deviceinterface_guid);
+		$this->CreateLibraryJSON($guids);
+		$this->CreateReadme($guids);
+		if ($ownio == 1) {
+			$this->CreateIO($guids);
+		}
+		if ($dataflowtype == 0) {
+			$this->CreateSplitter($guids);
+		}
+		$this->CreateDevice($guids);
+	}
 
-    protected function CreateIO($guids)
-    {
-        $library_guid = $guids["library_guid"];
-        $aliases = $this->ReadPropertyString("aliases");
-        $type = "IO";
-        $ident = $this->CreateGUIDIdent($library_guid, $type);
-        $CategoryID = $this->CreateCategory($ident, $type, $aliases);
-        $io_guid = $guids["io_guid"];
-        $ioidentjson = $this->CreateGUIDIdent($io_guid, $type."JSON");
-        $ioidentphp = $this->CreateGUIDIdent($io_guid, $type."PHP");
-        $this->CreateIOModuleJSONScript($guids, $ioidentjson, $CategoryID);
-        $this->CreateIOModulePHPScript($guids, $ioidentphp, $CategoryID);
-    }
+	protected function CreateIO($guids)
+	{
+		$library_guid = $guids["library_guid"];
+		$aliases = $this->ReadPropertyString("aliases");
+		$type = "IO";
+		$ident = $this->CreateGUIDIdent($library_guid, $type);
+		$CategoryID = $this->CreateCategory($ident, $type, $aliases);
+		$io_guid = $guids["io_guid"];
+		$ioidentjson = $this->CreateGUIDIdent($io_guid, $type . "JSON");
+		$ioidentphp = $this->CreateGUIDIdent($io_guid, $type . "PHP");
+		$this->CreateIOModuleJSONScript($guids, $ioidentjson, $CategoryID);
+		$this->CreateIOModulePHPScript($guids, $ioidentphp, $CategoryID);
+	}
 
 
-    protected function CreateSplitter($guids)
-    {
-        $library_guid = $guids["library_guid"];
-        $aliases = $this->ReadPropertyString("aliases");
-        $type = "Splitter";
-        $ident = $this->CreateGUIDIdent($library_guid, $type);
-        $CategoryID = $this->CreateCategory($ident, $type, $aliases);
-        $splitter_guid = $guids["splitter_guid"];
-        $splitteridentjson = $this->CreateGUIDIdent($splitter_guid, $type."JSON");
-        $splitteridentphp = $this->CreateGUIDIdent($splitter_guid, $type."PHP");
-        $this->CreateSplitterModuleJSONScript($guids, $splitteridentjson, $CategoryID);
-        $this->CreateSplitterModulePHPScript($guids, $splitteridentphp, $CategoryID);
-    }
+	protected function CreateSplitter($guids)
+	{
+		$library_guid = $guids["library_guid"];
+		$aliases = $this->ReadPropertyString("aliases");
+		$type = "Splitter";
+		$ident = $this->CreateGUIDIdent($library_guid, $type);
+		$CategoryID = $this->CreateCategory($ident, $type, $aliases);
+		$splitter_guid = $guids["splitter_guid"];
+		$splitteridentjson = $this->CreateGUIDIdent($splitter_guid, $type . "JSON");
+		$splitteridentphp = $this->CreateGUIDIdent($splitter_guid, $type . "PHP");
+		$this->CreateSplitterModuleJSONScript($guids, $splitteridentjson, $CategoryID);
+		$this->CreateSplitterModulePHPScript($guids, $splitteridentphp, $CategoryID);
+	}
 
-    protected function CreateDevice($guids)
-    {
-        $library_guid = $guids["library_guid"];
-        $aliases = $this->ReadPropertyString("aliases");
-        $type = "Device";
-        $ident = $this->CreateGUIDIdent($library_guid, $type);
-        $CategoryID = $this->CreateCategory($ident, $type, $aliases);
-        $device_guid = $guids["device_guid"];
-        $deviceidentjson = $this->CreateGUIDIdent($device_guid, $type."JSON");
-        $deviceidentphp = $this->CreateGUIDIdent($device_guid, $type."PHP");
-        $this->CreateDeviceModuleJSONScript($guids, $deviceidentjson, $CategoryID);
-        $this->CreateDeviceModulePHPScript($guids, $deviceidentphp, $CategoryID);
-    }
+	protected function CreateDevice($guids)
+	{
+		$library_guid = $guids["library_guid"];
+		$aliases = $this->ReadPropertyString("aliases");
+		$type = "Device";
+		$ident = $this->CreateGUIDIdent($library_guid, $type);
+		$CategoryID = $this->CreateCategory($ident, $type, $aliases);
+		$device_guid = $guids["device_guid"];
+		$deviceidentjson = $this->CreateGUIDIdent($device_guid, $type . "JSON");
+		$deviceidentphp = $this->CreateGUIDIdent($device_guid, $type . "PHP");
+		$this->CreateDeviceModuleJSONScript($guids, $deviceidentjson, $CategoryID);
+		$this->CreateDeviceModulePHPScript($guids, $deviceidentphp, $CategoryID);
+	}
 
-    protected function CreateCategory($ident, $type, $aliases)
-    {
-        $ModuleCategoryID = $this->ReadPropertyInteger("CategoryID");
-        //Prüfen ob Kategorie schon existiert
-        $CategoryID = @IPS_GetObjectIDByIdent($ident, $ModuleCategoryID);
-        if ($CategoryID === false)
-        {
-            $CategoryID = IPS_CreateCategory();
-            IPS_SetName($CategoryID, $type." ".$aliases);
-            IPS_SetIdent($CategoryID, $ident);
-            IPS_SetInfo($CategoryID, $type);
-            IPS_SetParent($CategoryID, $ModuleCategoryID);
-        }
-        return $CategoryID;
-    }
+	protected function CreateCategory($ident, $type, $aliases)
+	{
+		$ModuleCategoryID = $this->ReadPropertyInteger("CategoryID");
+		//Prüfen ob Kategorie schon existiert
+		$CategoryID = @IPS_GetObjectIDByIdent($ident, $ModuleCategoryID);
+		if ($CategoryID === false) {
+			$CategoryID = IPS_CreateCategory();
+			IPS_SetName($CategoryID, $type . " " . $aliases);
+			IPS_SetIdent($CategoryID, $ident);
+			IPS_SetInfo($CategoryID, $type);
+			IPS_SetParent($CategoryID, $ModuleCategoryID);
+		}
+		return $CategoryID;
+	}
 
-    protected function GetIOGUID($typeio)
-    {
-        if($typeio == 1) // Multicast Socket (Virtual I/O)
-        {
-            $io_guid = $this->ReadPropertyString("io_multicast_guid");
-            $rx_guid = $this->ReadPropertyString("virtual_io_rx_guid");
-            $tx_guid = $this->ReadPropertyString("virtual_io_tx_guid");
-        }
-        elseif ($typeio == 2) // Server Socket (Virtual I/O)
-        {
-            $io_guid = $this->ReadPropertyString("io_serversocket_guid");
+	protected function GetIOGUID($typeio)
+	{
+		if ($typeio == 1) // Multicast Socket (Virtual I/O)
+		{
+			$io_guid = $this->ReadPropertyString("io_multicast_guid");
 			$rx_guid = $this->ReadPropertyString("virtual_io_rx_guid");
 			$tx_guid = $this->ReadPropertyString("virtual_io_tx_guid");
-        }
-        elseif ($typeio == 3) // UDP Socket (Virtual I/O)
-        {
-            $io_guid = $this->ReadPropertyString("io_udpsocket_guid");
-            $rx_guid = $this->ReadPropertyString("virtual_io_rx_guid");
-            $tx_guid = $this->ReadPropertyString("virtual_io_tx_guid");
-        }
-        elseif ($typeio == 4) // Serial Port
-        {
-            $io_guid = $this->ReadPropertyString("io_serialport_guid");
-            $rx_guid = $this->ReadPropertyString("virtual_io_rx_guid");
-            $tx_guid = $this->ReadPropertyString("virtual_io_tx_guid");
-        }
-        elseif ($typeio == 5) // HID
-        {
-            $io_guid = $this->ReadPropertyString("io_hid_guid");
-            $rx_guid = $this->ReadPropertyString("hid_rx_guid");
-            $tx_guid = $this->ReadPropertyString("hid_tx_guid");
-        }
-        elseif ($typeio == 5) // WWW Reader
-        {
-            $io_guid = $this->ReadPropertyString("io_wwwreader_guid");
-            $rx_guid = $this->ReadPropertyString("www_reader_rx_guid");
-            $tx_guid = $this->ReadPropertyString("www_reader_tx_guid");
-        }
-		elseif ($typeio == 5) // WWW Reader
+		} elseif ($typeio == 2) // Server Socket (Virtual I/O)
+		{
+			$io_guid = $this->ReadPropertyString("io_serversocket_guid");
+			$rx_guid = $this->ReadPropertyString("virtual_io_rx_guid");
+			$tx_guid = $this->ReadPropertyString("virtual_io_tx_guid");
+		} elseif ($typeio == 3) // UDP Socket (Virtual I/O)
+		{
+			$io_guid = $this->ReadPropertyString("io_udpsocket_guid");
+			$rx_guid = $this->ReadPropertyString("virtual_io_rx_guid");
+			$tx_guid = $this->ReadPropertyString("virtual_io_tx_guid");
+		} elseif ($typeio == 4) // Serial Port
+		{
+			$io_guid = $this->ReadPropertyString("io_serialport_guid");
+			$rx_guid = $this->ReadPropertyString("virtual_io_rx_guid");
+			$tx_guid = $this->ReadPropertyString("virtual_io_tx_guid");
+		} elseif ($typeio == 5) // HID
+		{
+			$io_guid = $this->ReadPropertyString("io_hid_guid");
+			$rx_guid = $this->ReadPropertyString("hid_rx_guid");
+			$tx_guid = $this->ReadPropertyString("hid_tx_guid");
+		} elseif ($typeio == 5) // WWW Reader
 		{
 			$io_guid = $this->ReadPropertyString("io_wwwreader_guid");
 			$rx_guid = $this->ReadPropertyString("www_reader_rx_guid");
 			$tx_guid = $this->ReadPropertyString("www_reader_tx_guid");
-		}
-		elseif ($typeio == 6) // WWW Reader
+		} elseif ($typeio == 5) // WWW Reader
 		{
 			$io_guid = $this->ReadPropertyString("io_wwwreader_guid");
 			$rx_guid = $this->ReadPropertyString("www_reader_rx_guid");
 			$tx_guid = $this->ReadPropertyString("www_reader_tx_guid");
-		}
-		elseif ($typeio == 7) // Multicast Socket
+		} elseif ($typeio == 6) // WWW Reader
+		{
+			$io_guid = $this->ReadPropertyString("io_wwwreader_guid");
+			$rx_guid = $this->ReadPropertyString("www_reader_rx_guid");
+			$tx_guid = $this->ReadPropertyString("www_reader_tx_guid");
+		} elseif ($typeio == 7) // Multicast Socket
 		{
 			$io_guid = $this->ReadPropertyString("io_multicast_guid");
 			$rx_guid = $this->ReadPropertyString("server_rx_guid");
 			$tx_guid = $this->ReadPropertyString("server_tx_guid");
-		}
-		elseif ($typeio == 8) // Server Socket
+		} elseif ($typeio == 8) // Server Socket
 		{
 			$io_guid = $this->ReadPropertyString("io_serversocket_guid");
 			$rx_guid = $this->ReadPropertyString("server_rx_guid");
 			$tx_guid = $this->ReadPropertyString("server_tx_guid");
-		}
-		elseif ($typeio == 9) // UDP Socket
+		} elseif ($typeio == 9) // UDP Socket
 		{
 			$io_guid = $this->ReadPropertyString("io_udpsocket_guid");
 			$rx_guid = $this->ReadPropertyString("server_rx_guid");
 			$tx_guid = $this->ReadPropertyString("server_tx_guid");
+		} else // Clientsocket
+		{
+			$io_guid = $this->ReadPropertyString("io_clientsocket_guid");
+			$rx_guid = $this->ReadPropertyString("virtual_io_rx_guid");
+			$tx_guid = $this->ReadPropertyString("virtual_io_tx_guid");
 		}
-        else // Clientsocket
-        {
-            $io_guid = $this->ReadPropertyString("io_clientsocket_guid");
-            $rx_guid = $this->ReadPropertyString("virtual_io_rx_guid");
-            $tx_guid = $this->ReadPropertyString("virtual_io_tx_guid");
-        }
-        $io_guids = array ("io_guid" => $io_guid, "rx_guid" => $rx_guid, "tx_guid" => $tx_guid);
-        return $io_guids;
-    }
+		$io_guids = array("io_guid" => $io_guid, "rx_guid" => $rx_guid, "tx_guid" => $tx_guid);
+		return $io_guids;
+	}
 
-    protected function CreateReadme($guids)
-    {
-        $library_guid = $guids["library_guid"];
-        $ModuleCategoryID = $this->ReadPropertyInteger("CategoryID");
-        $prefix = $this->ReadPropertyString("prefix");
-        $device_guid = $guids["device_guid"];
-        $modulename = $this->ReadPropertyString("modulename");
+	protected function CreateReadme($guids)
+	{
+		$library_guid = $guids["library_guid"];
+		$ModuleCategoryID = $this->ReadPropertyInteger("CategoryID");
+		$prefix = $this->ReadPropertyString("prefix");
+		$device_guid = $guids["device_guid"];
+		$modulename = $this->ReadPropertyString("modulename");
 
-        $ident = $this->CreateGUIDIdent($library_guid, "readme");
-        $Scriptname = "README_md";
-        $ScriptID = @IPS_GetObjectIDByIdent($ident, $ModuleCategoryID);
+		$ident = $this->CreateGUIDIdent($library_guid, "readme");
+		$Scriptname = "README_md";
+		$ScriptID = @IPS_GetObjectIDByIdent($ident, $ModuleCategoryID);
 
-        if ($ScriptID === false)
-        {
-            $ScriptID = IPS_CreateScript(0);
-            IPS_SetName($ScriptID, $Scriptname);
-            IPS_SetParent($ScriptID, $ModuleCategoryID);
-            IPS_SetIdent($ScriptID, $ident);
-            $content = '# '.$modulename.'
+		if ($ScriptID === false) {
+			$ScriptID = IPS_CreateScript(0);
+			IPS_SetName($ScriptID, $Scriptname);
+			IPS_SetParent($ScriptID, $ModuleCategoryID);
+			IPS_SetIdent($ScriptID, $ident);
+			$content = '# ' . $modulename . '
+[![Version](https://img.shields.io/badge/Symcon-PHPModul-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
+[![Version](https://img.shields.io/badge/Symcon%20Version-5.0%20%3E-green.svg)](https://www.symcon.de/forum/threads/37412-IP-Symcon-5-0-%28Testing%29)
 
-Modul für IP-Symcon ab Version 4.
+Modul für IP-Symcon ab Version 5.
 
 ## Dokumentation
 
@@ -415,14 +386,14 @@ Beschreibung
 
 ## 2. Voraussetzungen
 
- - IPS 4.x
+ - IPS 5.x
  - weitere Vorraussetzungen.
 
 ## 3. Installation
 
 ### a. Laden des Moduls
 
-Die IP-Symcon (min Ver. 4.x) Konsole öffnen. Im Objektbaum unter Kerninstanzen die Instanz __*Modules*__ durch einen doppelten Mausklick öffnen.
+Die IP-Symcon (min Ver. 5.x) Konsole öffnen. Im Objektbaum unter Kerninstanzen die Instanz __*Modules*__ durch einen doppelten Mausklick öffnen.
 
 In der _Modules_ Instanz rechts oben auf den Button __*Hinzufügen*__ drücken.
  
@@ -469,7 +440,7 @@ Beschreibungstext
 
 #### Überschrift:
 
-`'.$prefix.'_Function(integer $InstanceID)`
+`' . $prefix . '_Function(integer $InstanceID)`
 
 Beschreibung Funktion
 
@@ -478,114 +449,108 @@ Beschreibung Funktion
 
 #### Überschrift:
 
-GUID: `'.$device_guid.'` ';
-            IPS_SetScriptContent($ScriptID, $content);
-        }
-        return $ScriptID;
-    }
+GUID: `' . $device_guid . '` ';
+			IPS_SetScriptContent($ScriptID, $content);
+		}
+		return $ScriptID;
+	}
 
-    protected function CreateLibraryJSON($guids)
-    {
-        $library_guid = $guids["library_guid"];
-        $ModuleCategoryID = $this->ReadPropertyInteger("CategoryID");
-        $author = $this->ReadPropertyString("author");
-        $modulename = $this->ReadPropertyString("modulename");
-        $url = $this->ReadPropertyString("url");
-        $version = $this->ReadPropertyString("version");
-        $build = $this->ReadPropertyInteger("build");
-        $date = 0;
+	protected function CreateLibraryJSON($guids)
+	{
+		$library_guid = $guids["library_guid"];
+		$ModuleCategoryID = $this->ReadPropertyInteger("CategoryID");
+		$author = $this->ReadPropertyString("author");
+		$modulename = $this->ReadPropertyString("modulename");
+		$url = $this->ReadPropertyString("url");
+		$version = $this->ReadPropertyString("version");
+		$build = $this->ReadPropertyInteger("build");
+		$date = 0;
 
-        $ident = $this->CreateGUIDIdent($library_guid, "lib");
-        $Scriptname = "library_json";
-        $ScriptID = @IPS_GetObjectIDByIdent($ident, $ModuleCategoryID);
+		$ident = $this->CreateGUIDIdent($library_guid, "lib");
+		$Scriptname = "library_json";
+		$ScriptID = @IPS_GetObjectIDByIdent($ident, $ModuleCategoryID);
 
-        if ($ScriptID === false)
-        {
-            $ScriptID = IPS_CreateScript(0);
-            IPS_SetName($ScriptID, $Scriptname);
-            IPS_SetParent($ScriptID, $ModuleCategoryID);
-            IPS_SetIdent($ScriptID, $ident);
-            $content = '{
-	"id": "'.$library_guid.'",
-	"author": "'.$author.'",
-	"name": "'.$modulename.'",
-	"url": "'.$url.'",
+		if ($ScriptID === false) {
+			$ScriptID = IPS_CreateScript(0);
+			IPS_SetName($ScriptID, $Scriptname);
+			IPS_SetParent($ScriptID, $ModuleCategoryID);
+			IPS_SetIdent($ScriptID, $ident);
+			$content = '{
+	"id": "' . $library_guid . '",
+	"author": "' . $author . '",
+	"name": "' . $modulename . '",
+	"url": "' . $url . '",
 	"compatibility": {
-    "version": "4.2",
+    "version": "5.0",
     "date": 1491343200
 	},
-	"version": "'.$version.'",
-	"build": '.$build.',
-	"date": '.$date.'
+	"version": "' . $version . '",
+	"build": ' . $build . ',
+	"date": ' . $date . '
 }';
-            IPS_SetScriptContent($ScriptID, $content);
-        }
-        return $ScriptID;
-    }
+			IPS_SetScriptContent($ScriptID, $content);
+		}
+		return $ScriptID;
+	}
 
-    protected function CreateIOModuleJSONScript($guids, $ioident, $CategoryID)
-    {
-    	$vendor = $this->ReadPropertyString("vendor");
-        $prefix = $this->ReadPropertyString("prefix");
-        $aliases = $this->ReadPropertyString("aliases");
-        $modulename = $this->ReadPropertyString("modulename");
-        $io_guid = $guids["io_guid"];
-        $rx_guid = $guids["rx_guid"];
-        $tx_guid = $guids["tx_guid"];
+	protected function CreateIOModuleJSONScript($guids, $ioident, $CategoryID)
+	{
+		$vendor = $this->ReadPropertyString("vendor");
+		$prefix = $this->ReadPropertyString("prefix");
+		$aliases = $this->ReadPropertyString("aliases");
+		$modulename = $this->ReadPropertyString("modulename");
+		$io_guid = $guids["io_guid"];
+		$rx_guid = $guids["rx_guid"];
+		$tx_guid = $guids["tx_guid"];
 
-        $Scriptname = "module_json";
-        $ScriptID = @IPS_GetObjectIDByIdent($ioident, $CategoryID);
+		$Scriptname = "module_json";
+		$ScriptID = @IPS_GetObjectIDByIdent($ioident, $CategoryID);
 
-        if ($ScriptID === false)
-        {
-            $ScriptID = IPS_CreateScript(0);
-            IPS_SetName($ScriptID, $Scriptname);
-            IPS_SetParent($ScriptID, $CategoryID);
-            IPS_SetIdent($ScriptID, $ioident);
+		if ($ScriptID === false) {
+			$ScriptID = IPS_CreateScript(0);
+			IPS_SetName($ScriptID, $Scriptname);
+			IPS_SetParent($ScriptID, $CategoryID);
+			IPS_SetIdent($ScriptID, $ioident);
 			$content = '{
-	"id": "'.$io_guid.'",
-	"name": "'.$modulename.'",
-	"type": 3,
-	"vendor": "'.$vendor.'",
-	"aliases": ["'.$aliases.'"],
+	"id": "' . $io_guid . '",
+	"name": "' . $modulename . '",
+	"type": 1,
+	"vendor": "' . $vendor . '",
+	"aliases": ["' . $aliases . '"],
 	"parentRequirements": [],
-	"childRequirements": ["'.$rx_guid.'"],
-	"implemented": ["'.$tx_guid .'"],
-	"prefix": "'.$prefix.'"
+	"childRequirements": ["' . $rx_guid . '"],
+	"implemented": ["' . $tx_guid . '"],
+	"prefix": "' . $prefix . '"
 }';
-            IPS_SetScriptContent($ScriptID, $content);
-        }
-        return $ScriptID;
-    }
+			IPS_SetScriptContent($ScriptID, $content);
+		}
+		return $ScriptID;
+	}
 
-    protected function CreateIOModulePHPScript($guids, $ioident, $CategoryID)
-    {
-        $modulename = $this->ReadPropertyString("modulename");
-        $ownio = $this->ReadPropertyInteger("ownio");
-        if($ownio == 1)
-        {
-            $rx_guid = $guids["rx_guid"];
-        }
-        else
-        {
-            $typeio = $this->ReadPropertyInteger("typeio");
-            $ioguids = $this->GetIOGUID($typeio);
-            $rx_guid = $ioguids["rx_guid"];
-        }
+	protected function CreateIOModulePHPScript($guids, $ioident, $CategoryID)
+	{
+		$modulename = $this->ReadPropertyString("modulename");
+		$ownio = $this->ReadPropertyInteger("ownio");
+		if ($ownio == 1) {
+			$rx_guid = $guids["rx_guid"];
+		} else {
+			$typeio = $this->ReadPropertyInteger("typeio");
+			$ioguids = $this->GetIOGUID($typeio);
+			$rx_guid = $ioguids["rx_guid"];
+		}
 
 
-        $Scriptname = "module_php";
-        $ScriptID = @IPS_GetObjectIDByIdent($ioident, $CategoryID);
+		$Scriptname = "module_php";
+		$ScriptID = @IPS_GetObjectIDByIdent($ioident, $CategoryID);
 
-        if ($ScriptID === false)
-        {
-            $ScriptID = IPS_CreateScript(0);
-            IPS_SetName($ScriptID, $Scriptname);
-            IPS_SetParent($ScriptID, $CategoryID);
-            IPS_SetIdent($ScriptID, $ioident);
-            $content = '<?
+		if ($ScriptID === false) {
+			$ScriptID = IPS_CreateScript(0);
+			IPS_SetName($ScriptID, $Scriptname);
+			IPS_SetParent($ScriptID, $CategoryID);
+			IPS_SetIdent($ScriptID, $ioident);
+			$content = '<?
 
-class '.$modulename.'IO extends IPSModule
+class ' . $modulename . 'IO extends IPSModule
 {
 
     public function Create()
@@ -609,94 +574,86 @@ class '.$modulename.'IO extends IPSModule
     protected function SendJSON ($data)
 	{
 		// Weiterleitung zu allen Gerät-/Device-Instanzen
-		$this->SendDataToChildren(json_encode(Array("DataID" => "'.$rx_guid.'", "Buffer" => $data))); //  I/O RX GUI
+		$this->SendDataToChildren(json_encode(Array("DataID" => "' . $rx_guid . '", "Buffer" => $data))); //  I/O RX GUI
 	}
 }';
-            IPS_SetScriptContent($ScriptID, $content);
-        }
-        return $ScriptID;
-    }
+			IPS_SetScriptContent($ScriptID, $content);
+		}
+		return $ScriptID;
+	}
 
-    protected function CreateSplitterModuleJSONScript($guids, $splitterident, $CategoryID)
-    {
-        // Später auslesen
-        $vendor = $this->ReadPropertyString("vendor");
-        $prefix = $this->ReadPropertyString("prefix");
-        $aliases = $this->ReadPropertyString("aliases");
-        $modulename = $this->ReadPropertyString("modulename");
-        $ownio = $this->ReadPropertyInteger("ownio");
-        if($ownio == 1)
-        {
-            $rx_guid = $guids["rx_guid"]; //
-            $tx_guid = $guids["tx_guid"]; //
-        }
-        else
-        {
-            $typeio = $this->ReadPropertyInteger("typeio");
-            $ioguids = $this->GetIOGUID($typeio);
-            $rx_guid = $ioguids["rx_guid"];
-            $tx_guid = $ioguids["tx_guid"];
-        }
+	protected function CreateSplitterModuleJSONScript($guids, $splitterident, $CategoryID)
+	{
+		// Später auslesen
+		$vendor = $this->ReadPropertyString("vendor");
+		$prefix = $this->ReadPropertyString("prefix");
+		$aliases = $this->ReadPropertyString("aliases");
+		$modulename = $this->ReadPropertyString("modulename");
+		$ownio = $this->ReadPropertyInteger("ownio");
+		if ($ownio == 1) {
+			$rx_guid = $guids["rx_guid"]; //
+			$tx_guid = $guids["tx_guid"]; //
+		} else {
+			$typeio = $this->ReadPropertyInteger("typeio");
+			$ioguids = $this->GetIOGUID($typeio);
+			$rx_guid = $ioguids["rx_guid"];
+			$tx_guid = $ioguids["tx_guid"];
+		}
 
-        $splitter_guid = $guids["splitter_guid"]; //
-        $splitterinterface_guid = $guids["splitterinterface_guid"]; // Interface GUI
-        $deviceinterface_guid = $guids["deviceinterface_guid"]; // Interface GUI
+		$splitter_guid = $guids["splitter_guid"]; //
+		$splitterinterface_guid = $guids["splitterinterface_guid"]; // Interface GUI
+		$deviceinterface_guid = $guids["deviceinterface_guid"]; // Interface GUI
 
-        $Scriptname = "module_json";
-        $ScriptID = @IPS_GetObjectIDByIdent($splitterident, $CategoryID);
+		$Scriptname = "module_json";
+		$ScriptID = @IPS_GetObjectIDByIdent($splitterident, $CategoryID);
 
-        if ($ScriptID === false)
-        {
-            $ScriptID = IPS_CreateScript(0);
-            IPS_SetName($ScriptID, $Scriptname);
-            IPS_SetParent($ScriptID, $CategoryID);
-            IPS_SetIdent($ScriptID, $splitterident);
-            $content = '{
-    "id": "'.$splitter_guid.'",
-    "name": "'.$modulename.'Splitter",
+		if ($ScriptID === false) {
+			$ScriptID = IPS_CreateScript(0);
+			IPS_SetName($ScriptID, $Scriptname);
+			IPS_SetParent($ScriptID, $CategoryID);
+			IPS_SetIdent($ScriptID, $splitterident);
+			$content = '{
+    "id": "' . $splitter_guid . '",
+    "name": "' . $modulename . 'Splitter",
     "type": 2,
-    "vendor": "'.$vendor.'",
-    "aliases": ["'.$aliases.' Splitter"],
-    "parentRequirements": ["'.$tx_guid.'"],
-    "childRequirements": ["'.$splitterinterface_guid.'"],
-    "implemented": ["'.$rx_guid.'", "'.$deviceinterface_guid.'"],
-    "prefix": "'.$prefix.'S"
+    "vendor": "' . $vendor . '",
+    "aliases": ["' . $aliases . ' Splitter"],
+    "parentRequirements": ["' . $tx_guid . '"],
+    "childRequirements": ["' . $splitterinterface_guid . '"],
+    "implemented": ["' . $rx_guid . '", "' . $deviceinterface_guid . '"],
+    "prefix": "' . $prefix . 'S"
 }';
-            IPS_SetScriptContent($ScriptID, $content);
-        }
-        return $ScriptID;
-    }
+			IPS_SetScriptContent($ScriptID, $content);
+		}
+		return $ScriptID;
+	}
 
-    protected function CreateSplitterModulePHPScript($guids, $splitterident, $CategoryID)
-    {
-        $modulename = $this->ReadPropertyString("modulename");
-        $ownio = $this->ReadPropertyInteger("ownio");
-        if($ownio == 1)
-        {
-            $io_guid = $guids["io_guid"];
-            $tx_guid = $guids["tx_guid"];
-        }
-        else
-        {
-            $typeio = $this->ReadPropertyInteger("typeio");
-            $ioguids = $this->GetIOGUID($typeio);
-            $io_guid = $ioguids["io_guid"];
-            $tx_guid = $ioguids["tx_guid"];
-        }
-        $splitterinterface_guid = $guids["splitterinterface_guid"]; // Interface GUI
+	protected function CreateSplitterModulePHPScript($guids, $splitterident, $CategoryID)
+	{
+		$modulename = $this->ReadPropertyString("modulename");
+		$ownio = $this->ReadPropertyInteger("ownio");
+		if ($ownio == 1) {
+			$io_guid = $guids["io_guid"];
+			$tx_guid = $guids["tx_guid"];
+		} else {
+			$typeio = $this->ReadPropertyInteger("typeio");
+			$ioguids = $this->GetIOGUID($typeio);
+			$io_guid = $ioguids["io_guid"];
+			$tx_guid = $ioguids["tx_guid"];
+		}
+		$splitterinterface_guid = $guids["splitterinterface_guid"]; // Interface GUI
 
-        $Scriptname = "module_php";
-        $ScriptID = @IPS_GetObjectIDByIdent($splitterident, $CategoryID);
+		$Scriptname = "module_php";
+		$ScriptID = @IPS_GetObjectIDByIdent($splitterident, $CategoryID);
 
-        if ($ScriptID === false)
-        {
-            $ScriptID = IPS_CreateScript(0);
-            IPS_SetName($ScriptID, $Scriptname);
-            IPS_SetParent($ScriptID, $CategoryID);
-            IPS_SetIdent($ScriptID, $splitterident);
-            $content = '<?
+		if ($ScriptID === false) {
+			$ScriptID = IPS_CreateScript(0);
+			IPS_SetName($ScriptID, $Scriptname);
+			IPS_SetParent($ScriptID, $CategoryID);
+			IPS_SetIdent($ScriptID, $splitterident);
+			$content = '<?
 
-class '.$modulename.'Splitter extends IPSModule
+class ' . $modulename . 'Splitter extends IPSModule
 {
 
     public function Create()
@@ -706,7 +663,7 @@ class '.$modulename.'Splitter extends IPSModule
 		
 		//These lines are parsed on Symcon Startup or Instance creation
         //You cannot use variables here. Just static values.
-		$this->RequireParent("'.$io_guid.'"); //  I/O
+		$this->RequireParent("' . $io_guid . '"); //  I/O
     }
 
     public function ApplyChanges()
@@ -731,7 +688,7 @@ class '.$modulename.'Splitter extends IPSModule
 		
 	 
 		// Weiterleitung zu allen Gerät-/Device-Instanzen
-		$this->SendDataToChildren(json_encode(Array("DataID" => "'.$splitterinterface_guid.'", "Buffer" => $data->Buffer))); // Splitter Interface GUI
+		$this->SendDataToChildren(json_encode(Array("DataID" => "' . $splitterinterface_guid . '", "Buffer" => $data->Buffer))); // Splitter Interface GUI
 	}
 	
 	// Type String, Declaration can be used when PHP 7 is available
@@ -749,139 +706,247 @@ class '.$modulename.'Splitter extends IPSModule
 		// z.B. CRC prüfen, in Einzelteile zerlegen
 		
 		// Weiterleiten zur I/O Instanz
-		$result = $this->SendDataToParent(json_encode(Array("DataID" => "'.$tx_guid.'", "Buffer" => $data->Buffer))); // TX GUI
+		$result = $this->SendDataToParent(json_encode(Array("DataID" => "' . $tx_guid . '", "Buffer" => $data->Buffer))); // TX GUI
 			
 		return $result;
 	 
 	}
 }';
-            IPS_SetScriptContent($ScriptID, $content);
-        }
-        return $ScriptID;
-    }
+			IPS_SetScriptContent($ScriptID, $content);
+		}
+		return $ScriptID;
+	}
 
-    protected function CreateDeviceModuleJSONScript($guids, $deviceident, $CategoryID)
-    {
+	protected function CreateDeviceModuleJSONScript($guids, $deviceident, $CategoryID)
+	{
 		$dataflowtype = $this->ReadPropertyInteger("dataflowtype");
-    	$vendor = $this->ReadPropertyString("vendor");
-        $prefix = $this->ReadPropertyString("prefix");
-        $aliases = $this->ReadPropertyString("aliases");
-        $modulename = $this->ReadPropertyString("modulename");
-		$tx_guid = $guids["rx_guid"]; // TX
-        $rx_guid = $guids["rx_guid"]; // RX
+		$vendor = $this->ReadPropertyString("vendor");
+		$prefix = $this->ReadPropertyString("prefix");
+		$aliases = $this->ReadPropertyString("aliases");
+		$modulename = $this->ReadPropertyString("modulename");
+		$ownio = $this->ReadPropertyInteger("ownio");
+		if ($ownio == 1) {
+			$rx_guid = $guids["rx_guid"]; // RX
+			$tx_guid = $guids["tx_guid"]; // TX
+		} else {
+			$typeio = $this->ReadPropertyInteger("typeio");
+			$ioguids = $this->GetIOGUID($typeio);
+			$rx_guid = $ioguids["rx_guid"]; // RX
+			$tx_guid = $ioguids["tx_guid"]; // TX
+		}
 		$splitterinterface_guid = $guids["splitterinterface_guid"]; // Interface GUI
-        $device_guid = $guids["device_guid"];
-        $deviceinterface_guid = $guids["deviceinterface_guid"]; // Interface GUI
+		$device_guid = $guids["device_guid"];
+		$deviceinterface_guid = $guids["deviceinterface_guid"]; // Interface GUI
 
-        $Scriptname = "module_json";
-        $ScriptID = @IPS_GetObjectIDByIdent($deviceident, $CategoryID);
+		$Scriptname = "module_json";
+		$ScriptID = @IPS_GetObjectIDByIdent($deviceident, $CategoryID);
 
-        if ($ScriptID === false)
-        {
-            $ScriptID = IPS_CreateScript(0);
-            IPS_SetName($ScriptID, $Scriptname);
-            IPS_SetParent($ScriptID, $CategoryID);
-            IPS_SetIdent($ScriptID, $deviceident);
-            if($dataflowtype == 0) // I/O, Splitter
+		if ($ScriptID === false) {
+			$ScriptID = IPS_CreateScript(0);
+			IPS_SetName($ScriptID, $Scriptname);
+			IPS_SetParent($ScriptID, $CategoryID);
+			IPS_SetIdent($ScriptID, $deviceident);
+			if ($dataflowtype == 0) // I/O, Splitter
 			{
 				$content = '{
-	"id": "'.$device_guid.'",
-	"name": "'.$modulename.'",
+	"id": "' . $device_guid . '",
+	"name": "' . $modulename . '",
 	"type": 3,
-	"vendor": "'.$vendor.'",
-	"aliases": ["'.$aliases.'"],
-	"parentRequirements": ["'.$deviceinterface_guid.'"],
+	"vendor": "' . $vendor . '",
+	"aliases": ["' . $aliases . '"],
+	"parentRequirements": ["' . $deviceinterface_guid . '"],
 	"childRequirements": [],
-	"implemented": ["'.$splitterinterface_guid.'"],
-	"prefix": "'.$prefix.'"
+	"implemented": ["' . $splitterinterface_guid . '"],
+	"prefix": "' . $prefix . '"
 }';
-			}
-			elseif($dataflowtype == 1) // I/O
+			} elseif ($dataflowtype == 1) // I/O
 			{
 				$content = '{
-	"id": "'.$device_guid.'",
-	"name": "'.$modulename.'",
+	"id": "' . $device_guid . '",
+	"name": "' . $modulename . '",
 	"type": 3,
-	"vendor": "'.$vendor.'",
-	"aliases": ["'.$aliases.'"],
-	"parentRequirements": ["'.$tx_guid.'"],
+	"vendor": "' . $vendor . '",
+	"aliases": ["' . $aliases . '"],
+	"parentRequirements": ["' . $tx_guid . '"],
 	"childRequirements": [],
-	"implemented": ["'.$rx_guid .'"],
-	"prefix": "'.$prefix.'"
+	"implemented": ["' . $rx_guid . '"],
+	"prefix": "' . $prefix . '"
 }';
-			}
-			else{
+			} else {
 				$content = '{
-	"id": "'.$device_guid.'",
-	"name": "'.$modulename.'",
+	"id": "' . $device_guid . '",
+	"name": "' . $modulename . '",
 	"type": 3,
-	"vendor": "'.$vendor.'",
-	"aliases": ["'.$aliases.'"],
+	"vendor": "' . $vendor . '",
+	"aliases": ["' . $aliases . '"],
 	"parentRequirements": [],
 	"childRequirements": [],
 	"implemented": [],
-	"prefix": "'.$prefix.'"
+	"prefix": "' . $prefix . '"
 }';
 			}
 
-            IPS_SetScriptContent($ScriptID, $content);
-        }
-        return $ScriptID;
-    }
+			IPS_SetScriptContent($ScriptID, $content);
+		}
+		return $ScriptID;
+	}
 
-    protected function CreateDeviceModulePHPScript($guids, $deviceident, $CategoryID)
-    {
+	protected function CreateDeviceModulePHPScript($guids, $deviceident, $CategoryID)
+	{
 		$dataflowtype = $this->ReadPropertyInteger("dataflowtype");
-    	$modulename = $this->ReadPropertyString("modulename");
-		$io_guid = $guids["io_guid"];
+		$modulename = $this->ReadPropertyString("modulename");
+		$ownio = $this->ReadPropertyInteger("ownio");
+		if ($ownio == 1) {
+			$tx_guid = $guids["tx_guid"]; // TX
+			$io_guid = $guids["io_guid"];
+		} else {
+			$typeio = $this->ReadPropertyInteger("typeio");
+			$ioguids = $this->GetIOGUID($typeio);
+			$io_guid = $ioguids["io_guid"];
+			$tx_guid = $ioguids["tx_guid"]; // TX
+		}
 		$splitter_guid = $guids["splitter_guid"];
-        $deviceinterface_guid = $guids["deviceinterface_guid"]; // Interface GUI
+		$deviceinterface_guid = $guids["deviceinterface_guid"]; // Interface GUI
 
-        $Scriptname = "module_php";
-        $ScriptID = @IPS_GetObjectIDByIdent($deviceident, $CategoryID);
+		$Scriptname = "module_php";
+		$ScriptID = @IPS_GetObjectIDByIdent($deviceident, $CategoryID);
 
-        if ($ScriptID === false)
-        {
-            $ScriptID = IPS_CreateScript(0);
-            IPS_SetName($ScriptID, $Scriptname);
-            IPS_SetParent($ScriptID, $CategoryID);
-            IPS_SetIdent($ScriptID, $deviceident);
-            $content = '<?
+		if ($ScriptID === false) {
+			$ScriptID = IPS_CreateScript(0);
+			IPS_SetName($ScriptID, $Scriptname);
+			IPS_SetParent($ScriptID, $CategoryID);
+			IPS_SetIdent($ScriptID, $deviceident);
+			$content = '<?
 
-class '.$modulename.' extends IPSModule
+class ' . $modulename . ' extends IPSModule
 {
 
     public function Create()
     {
-	//Never delete this line!
+		//Never delete this line!
         parent::Create();
 		
 		//These lines are parsed on Symcon Startup or Instance creation
-        //You cannot use variables here. Just static values.';
-            if($dataflowtype == 0)
-			{
-				$content .= '$this->ConnectParent("'.$splitter_guid.'"); // Splitter';
-			}
-			elseif($dataflowtype == 1)
-			{
-				$content .= '$this->ConnectParent("'.$io_guid.'"); // I/O';
-			}
-    $content .='}
-
-    public function ApplyChanges()
-    {
-	//Never delete this line!
-        parent::ApplyChanges();
-       
-    }
-    
-    protected function SendToSplitter(string $payload)
-		{						
-			//an Splitter schicken
-			$result = $this->SendDataToParent(json_encode(Array("DataID" => "'.$deviceinterface_guid.'", "Buffer" => $payload))); // Interface GUI
-			return $result;
+        //You cannot use variables here. Just static values.
+		$this->RegisterPropertyString("host", "");' . PHP_EOL;
+		if ($dataflowtype == 0) {
+		$content .= '
+		$this->ConnectParent("' . $splitter_guid . '"); // Splitter'.PHP_EOL;
+		} elseif ($dataflowtype == 1) {
+		$content .= '
+		$this->ConnectParent("' . $io_guid . '"); // I/O'.PHP_EOL;
 		}
+$content .= '
+	}
+
+	public function ApplyChanges()
+	{
+		// wait until IPS is started, dataflow does not work until stated
+		$this->RegisterMessage(0, IPS_KERNELSTARTED);
 		
+		//Never delete this line!
+		parent::ApplyChanges();
+		// check kernel ready, if not wait
+		if (IPS_GetKernelRunlevel() <> KR_READY)
+			return;
+				
+		$this->ValidateConfiguration();
+	}
+	
+	private function ValidateConfiguration()
+	{
+		$host = $this->ReadPropertyString("host");
+		if($host == "")
+		{
+			$this->SetStatus(205);
+		}
+		$objectid = $this->RegisterVariableBoolean(\'STATE\', $this->Translate(\'State\'), \'~Switch\', $this->_getPosition());
+		$this->SendDebug("Device", "variable STATE object id : ". $objectid, 0);
+		$this->EnableAction(\'STATE\');
+		
+		
+		$this->SetStatus(102);
+	}
+	
+	public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+	{
+		switch ($Message) {
+			case IPS_KERNELSTARTED: // only after IP-Symcon started
+				$this->KernelReady(); // if IP-Symcon is ready
+				break;
+		}
+	}
+
+	/**
+	 * Wird ausgeführt wenn der Kernel hochgefahren wurde.
+	 * @access protected
+	 */
+	protected function KernelReady()
+	{
+		$this->ApplyChanges();
+	}
+	
+	';
+	if ($dataflowtype == 0) {
+	$content .= '
+	protected function SendToSplitter(string $payload)
+	{						
+		// send to splitter
+		$result = $this->SendDataToParent(json_encode(Array("DataID" => "' . $deviceinterface_guid . '", "Buffer" => $payload))); // Interface GUI
+		return $result;
+	}';
+	}
+	elseif($dataflowtype == 1)
+	{
+	$content .= '
+	
+	protected function SendToIO(string $payload)
+	{						
+		// send to io
+		$result = $this->SendDataToParent(json_encode(Array("DataID" => "' . $tx_guid . '", "Buffer" => $payload))); // Interface GUI
+		return $result;
+	}';
+	}
+
+	$content .= '
+	
+	public function ReceiveData($JSONString)
+	{
+		$this->SendDebug("Recieve:", $JSONString, 0);
+		$data = json_decode($JSONString);
+	}
+	
+	public function RequestAction($Ident, $Value)
+	{
+		switch ($Ident) {
+			case "STATE":
+				$this->PowerToogle($Value);
+				break;
+			default:
+				$this->SendDebug("Device", "Invalid ident", 0);
+		}
+	}
+
+	public function PowerToogle(bool $state)
+	{
+		if ($state) {
+			$response = $this->PowerOn();
+		} else {
+			$response = $this->PowerOff();
+		}
+		return $response;
+	}
+
+	public function PowerOn()
+	{
+		
+	}
+
+	public function PowerOff()
+	{
+		
+	}
+	
 	/**
 	 * gets current IP-Symcon version
 	 * @return float|int
@@ -1056,6 +1121,25 @@ class '.$modulename.' extends IPSModule
 		return $form;
 	}
 
+	/**
+	 * return incremented position
+	 * @return int
+	 */
+	private function _getPosition()
+	{
+		$this->position++;
+		return $this->position;
+	}
+	
+	/***********************************************************
+	 * Migrations
+	 ***********************************************************/
+
+	/**
+	 * Polyfill for IP-Symcon 4.4 and older
+	 * @param string $Ident
+	 * @param mixed $Value
+	 */
 	//Add this Polyfill for IP-Symcon 4.4 and older
 	protected function SetValue($Ident, $Value)
 	{
@@ -1065,33 +1149,32 @@ class '.$modulename.' extends IPSModule
 		} else {
 			SetValue($this->GetIDForIdent($Ident), $Value);
 		}
-	}
-		
+	}	
 }';
-            IPS_SetScriptContent($ScriptID, $content);
-        }
-        return $ScriptID;
-    }
+			IPS_SetScriptContent($ScriptID, $content);
+		}
+		return $ScriptID;
+	}
 
-    protected function CreateGUIDIdent($guid, $type)
-    {
-        $search = array("-", "{", "}");
-        $replace = array("", "", "");
-        $guid = str_replace($search, $replace, $guid);
-        $ident = $guid."_".$type;
-        return $ident;
-    }
-	
+	protected function CreateGUIDIdent($guid, $type)
+	{
+		$search = array("-", "{", "}");
+		$replace = array("", "", "");
+		$guid = str_replace($search, $replace, $guid);
+		$ident = $guid . "_" . $type;
+		return $ident;
+	}
+
 	public function RequestAction($Ident, $Value)
-    {
-        switch($Ident) {
-            case "CreateScripts":
-                $this->CreateScripts();
+	{
+		switch ($Ident) {
+			case "CreateScripts":
+				$this->CreateScripts();
 				break;
-            default:
-                throw new Exception("Invalid ident");
-        }
-    }
+			default:
+				throw new Exception("Invalid ident");
+		}
+	}
 
 	/**
 	 * gets current IP-Symcon version
@@ -1158,52 +1241,48 @@ class '.$modulename.' extends IPSModule
 	}
 
 
-    //Configuration Form
+	//Configuration Form
 
-    public function GetConfigurationForm()
-    {
-        $formhead = $this->FormHead();
-        $formactions = $this->FormActions();
-        $formelementsend = '{ "type": "Label", "label": "__________________________________________________________________________________________________" }';
-        $formstatus = $this->FormStatus();
-        return	'{ '.$formhead.$formelementsend.'],'.$formactions.$formstatus.' }';
-    }
+	public function GetConfigurationForm()
+	{
+		$formhead = $this->FormHead();
+		$formactions = $this->FormActions();
+		$formelementsend = '{ "type": "Label", "label": "__________________________________________________________________________________________________" }';
+		$formstatus = $this->FormStatus();
+		return '{ ' . $formhead . $formelementsend . '],' . $formactions . $formstatus . ' }';
+	}
 
 
-    // Show GUID field. Otherwise create GUID
-    private function UseExistingGUID()
-    {
-        $generateguid = $this->ReadPropertyInteger("generateguid");
-        $dataflowtype = $this->ReadPropertyInteger("dataflowtype");
-        $ownio = $this->ReadPropertyInteger("ownio");
-        if($generateguid == 1)
-        {
-            $form = '{ "type": "ValidationTextBox", "name": "library_guid", "caption": "GUID library" },';
-            if($ownio == 1)
-            {
-                $form .= '{ "type": "ValidationTextBox", "name": "io_guid", "caption": "GUID IO" },
+	// Show GUID field. Otherwise create GUID
+	private function UseExistingGUID()
+	{
+		$generateguid = $this->ReadPropertyInteger("generateguid");
+		$dataflowtype = $this->ReadPropertyInteger("dataflowtype");
+		$ownio = $this->ReadPropertyInteger("ownio");
+		if ($generateguid == 1) {
+			$form = '{ "type": "ValidationTextBox", "name": "library_guid", "caption": "GUID library" },';
+			if ($ownio == 1) {
+				$form .= '{ "type": "ValidationTextBox", "name": "io_guid", "caption": "GUID IO" },
                 { "type": "ValidationTextBox", "name": "rx_guid", "caption": "GUID RX" },
                 { "type": "ValidationTextBox", "name": "tx_guid", "caption": "GUID TX" },';
-            }
+			}
 
-            if($dataflowtype == 0) // IO / Splitter / Device
-            {
-                $form .= '{ "type": "ValidationTextBox", "name": "splitter_guid", "caption": "GUID splitter" },
+			if ($dataflowtype == 0) // IO / Splitter / Device
+			{
+				$form .= '{ "type": "ValidationTextBox", "name": "splitter_guid", "caption": "GUID splitter" },
                 { "type": "ValidationTextBox", "name": "splitterinterface_guid", "caption": "GUID splitter interface" },';
-            }
-            $form .= '{ "type": "ValidationTextBox", "name": "device_guid", "caption": "GUID device" },
+			}
+			$form .= '{ "type": "ValidationTextBox", "name": "device_guid", "caption": "GUID device" },
                 { "type": "ValidationTextBox", "name": "deviceinterface_guid", "caption": "GUID device interface" },';
-        }
-        else
-        {
-            $form = '';
-        }
-        return $form;
-    }
+		} else {
+			$form = '';
+		}
+		return $form;
+	}
 
-    private function ChooseDataFlowType()
-    {
-        $form = '{ "type": "Label", "label": "Choose type of dataflow" },
+	private function ChooseDataFlowType()
+	{
+		$form = '{ "type": "Label", "label": "Choose type of dataflow" },
                 { "type": "Select", "name": "dataflowtype", "caption": "Dataflow Type",
                   "options": [
                     { "label": "IO / Splitter / Device", "value": 0 },
@@ -1218,16 +1297,15 @@ class '.$modulename.' extends IPSModule
                     { "label": "Own IO", "value": 1 }
                   ]
                 },';
-        return $form;
-    }
+		return $form;
+	}
 
-    // Choose IO
-    private function SelectIOType()
-    {
-        $ownio = $this->ReadPropertyInteger("ownio");
-        if($ownio == 0)
-        {
-            $form = '{ "type": "Label", "label": "Select Type of IO" },
+	// Choose IO
+	private function SelectIOType()
+	{
+		$ownio = $this->ReadPropertyInteger("ownio");
+		if ($ownio == 0) {
+			$form = '{ "type": "Label", "label": "Select Type of IO" },
                 { "type": "Select", "name": "typeio", "caption": "IO type",
                   "options": [
                     { "label": "Clientsocket", "value": 0 },
@@ -1242,17 +1320,15 @@ class '.$modulename.' extends IPSModule
                     { "label": "UDP Socket", "value": 9 }
                   ]
                 },';
-        }
-        else
-        {
-            $form = '';
-        }
-        return $form;
-    }
+		} else {
+			$form = '';
+		}
+		return $form;
+	}
 
-    protected function FormHead()
-    {
-        $form = '"elements":
+	protected function FormHead()
+	{
+		$form = '"elements":
             [
                 { "type": "Label", "label": "This module is creating templates for the dataflow in a PHP module for IP-Symcon" },
                 { "type": "Label", "label": "Select category for the scripts" },
@@ -1272,26 +1348,26 @@ class '.$modulename.' extends IPSModule
                     { "label": "Existing GUID", "value": 1 }
                   ]
                 },
-               '.$this->ChooseDataFlowType().$this->UseExistingGUID().$this->SelectIOType();
+               ' . $this->ChooseDataFlowType() . $this->SelectIOType() . $this->UseExistingGUID() ;
 
-        return $form;
-    }
+		return $form;
+	}
 
-    protected function FormActions()
-    {
-        $form = '"actions":
+	protected function FormActions()
+	{
+		$form = '"actions":
 			[
 				{ "type": "Label", "label": "Generate GUIDs" },
 				{ "type": "Button", "label": "Generate GUID", "onClick": "DataFlowGenerator_GenerateGUID($id);" },
 				{ "type": "Label", "label": "Generate scripts" },
 				{ "type": "Button", "label": "Generate Scripts", "onClick": "DataFlowGenerator_CreateScripts($id);" }
 			],';
-        return  $form;
-    }
+		return $form;
+	}
 
-    protected function FormStatus()
-    {
-        $form = '"status":
+	protected function FormStatus()
+	{
+		$form = '"status":
             [
                 {
                     "code": 101,
@@ -1329,8 +1405,8 @@ class '.$modulename.' extends IPSModule
                     "caption": "category must not be empty."
                 }
             ]';
-        return $form;
-    }
+		return $form;
+	}
 
 }
 
