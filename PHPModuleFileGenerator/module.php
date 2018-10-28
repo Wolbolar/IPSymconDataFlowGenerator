@@ -5,7 +5,7 @@ class DataFlowGenerator extends IPSModule
 
 	public function Create()
 	{
-//Never delete this line!
+		//Never delete this line!
 		parent::Create();
 
 		//These lines are parsed on Symcon Startup or Instance creation
@@ -794,6 +794,7 @@ class ' . $modulename . 'Splitter extends IPSModule
 	protected function CreateDeviceModulePHPScript($guids, $deviceident, $CategoryID)
 	{
 		$dataflowtype = $this->ReadPropertyInteger("dataflowtype");
+		$prefix = $this->ReadPropertyString("prefix");
 		$modulename = $this->ReadPropertyString("modulename");
 		$ownio = $this->ReadPropertyInteger("ownio");
 		if ($ownio == 1) {
@@ -820,7 +821,9 @@ class ' . $modulename . 'Splitter extends IPSModule
 
 class ' . $modulename . ' extends IPSModule
 {
-
+    // helper properties
+	private $position = 0;
+    
     public function Create()
     {
 		//Never delete this line!
@@ -1037,6 +1040,15 @@ $content .= '
 	{
 		$form = [
 			[
+				\'type\' => \'Label\',
+				\'label\' => \'IP adress\'
+			],
+			[
+				\'name\' => \'host\',
+				\'type\' => \'ValidationTextBox\',
+				\'caption\' => \'IP adress\'
+			],
+			[
 				\'name\' => \'devicetype\',
 				\'type\' => \'Select\',
 				\'caption\' => \'device type\',
@@ -1055,15 +1067,6 @@ $content .= '
 					]
 				]
 			],
-			[
-				\'type\' => \'Label\',
-				\'label\' => \'IP adress\'
-			],
-			[
-				\'name\' => \'ip\',
-				\'type\' => \'ValidationTextBox\',
-				\'caption\' => \'IP adress\'
-			]
 		];
 		return $form;
 	}
@@ -1082,7 +1085,7 @@ $content .= '
 			[
 				\'type\' => \'Button\',
 				\'label\' => \'labelname\',
-				\'onClick\' => \'Prefix_Functionname($id);\'
+				\'onClick\' => \''.$prefix.'_Functionname($id);\'
 			]
 		];
 
